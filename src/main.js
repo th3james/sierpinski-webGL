@@ -46,7 +46,7 @@
       -1.0, -1.0,
       1.0, -1.0,
     ]
-    var vertices = Sierpinski.generateVertices(startTriangle, 1);
+    var vertices = Sierpinski.generateVertices(startTriangle, 8);
 
     gl.bufferData(
       gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW

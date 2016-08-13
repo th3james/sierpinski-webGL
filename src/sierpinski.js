@@ -8,7 +8,7 @@
   }
 
   Sierpinski.generateVertices = function(startTriangle, levels) {
-    newTriangles = [];
+    var newTriangles = [];
 
     // for each vertex
     for(var i = 0; i < startTriangle.length; i += 2) {
@@ -33,13 +33,15 @@
       var thirdLength = newTriangles.length/3;
 
       return [0,1,2].map(function(i) {
+        var start = i*thirdLength;
+        var end = (i+1)*thirdLength;
         return Sierpinski.generateVertices(
-          newTriangles.slice(i*thirdLength, (i+1)*thirdLength),
+          newTriangles.slice(start, end),
           levels - 1
         );
       }).reduce(function(allSubTriangles, subTriangles) {
         return allSubTriangles.concat(subTriangles);
-      });
+      }, []);
     }
   };
 })();

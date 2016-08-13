@@ -126,7 +126,7 @@
   var startRenderLoop = function(gl) {
     var time = 0.0;
     var verticesBuffer = initBuffers(gl)
-    var colorBuffer = initColorBuffer(gl);
+    var colorBuffer = null //initColorBuffer(gl);
     var shaderProgram = initShaders(gl);
     var vertexPositionAttribute = initVertexPositionAttribute(
       gl, shaderProgram

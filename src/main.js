@@ -44,7 +44,6 @@
     var vertices = [
       1.0, 1.0, 0.0, 
       -1.0, 1.0,  0.0,
-      1.0,  -1.0, 0.0,
       1.0,  -1.0, 0.0
     ];
 
@@ -105,7 +104,7 @@
     gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
 
     setMatrixUniforms(perspectiveMatrix, program);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
   }
 
   var startRenderLoop = function(gl) {

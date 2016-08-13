@@ -138,12 +138,12 @@
   }
 
   var horizAspect = 480.0/640.0;
-  var drawScene = function(gl, program, squareVerticesBuffer, squareVerticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, zoom) {
+  var drawScene = function(gl, program, squareVerticesBuffer, squareVerticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     var perspectiveMatrix = makePerspective(45, horizAspect, 0.1, 100.0);
 
     loadIdentity();
-    mvTranslate([-0.0, 0.0, zoom]);
+    mvTranslate(cameraPosition);
     
     gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
     gl.vertexAttribPointer(
@@ -187,13 +187,15 @@
     var vertexColorAttribute = initVertexColorAttribute(
       gl, shaderProgram
     );
-    var zoom = -6.0;
+
+    var cameraPosition = [0.0, 0.0, -6.0];
     drawScene(
-      gl, shaderProgram, squareVerticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, zoom
+      gl, shaderProgram, squareVerticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
     );
     setTimeout(function() {
+      cameraPosition = [-0.5, 0.2, -4.0];
       drawScene(
-        gl, shaderProgram, squareVerticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, -4.0
+        gl, shaderProgram, squareVerticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
       );
     }, 3000)
   };

@@ -22,4 +22,43 @@
     
     return gl;
   };
+
+
+  WebGLHelpers.getShader = function(gl, id, type) {
+    var shaderScript, theSource, currentChild, shader;
+
+    shaderScript = document.getElementById(id);
+
+    if (!shaderScript) {
+      alert("Failed to load shader");
+      throw "Failed to load shader"
+    }
+
+    theSource = shaderScript.text;
+
+    if (!type) {
+      if (shaderScript.type == "x-shader/x-fragment") {
+        type = gl.FRAGMENT_SHADER;
+      } else if (shaderScript.type == "x-shader/x-vertex") {
+        type = gl.VERTEX_SHADER;
+      } else {
+        throw "Can't determine shader type";
+      }
+    }
+
+    shader = gl.createShader(type);
+    gl.shaderSource(shader, theSource);
+    gl.compileShader(shader);
+
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {  
+      alert(
+        "An error occurred compiling the shaders: " +
+        gl.getShaderInfoLog(shader)
+      );
+      gl.deleteShader(shader);
+      throw "Failed to compile shader";
+    }
+
+    return shader;
+  };
 })();

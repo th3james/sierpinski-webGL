@@ -1,46 +1,7 @@
 (function() {
-
-  var getShader = function(gl, id, type) {
-    var shaderScript, theSource, currentChild, shader;
-
-    shaderScript = document.getElementById(id);
-
-    if (!shaderScript) {
-      alert("Failed to load shader");
-      throw "Failed to load shader"
-    }
-
-    theSource = shaderScript.text;
-
-    if (!type) {
-      if (shaderScript.type == "x-shader/x-fragment") {
-        type = gl.FRAGMENT_SHADER;
-      } else if (shaderScript.type == "x-shader/x-vertex") {
-        type = gl.VERTEX_SHADER;
-      } else {
-        throw "Can't determine shader type";
-      }
-    }
-
-    shader = gl.createShader(type);
-    gl.shaderSource(shader, theSource);
-    gl.compileShader(shader);
-
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {  
-      alert(
-        "An error occurred compiling the shaders: " +
-        gl.getShaderInfoLog(shader)
-      );
-      gl.deleteShader(shader);
-      throw "Failed to compile shader";
-    }
-
-    return shader;
-  };
-
   var initShaders = function(gl) {
-    var fragmentShader = getShader(gl, "shader-fs");
-    var vertexShader = getShader(gl, "shader-vs");
+    var fragmentShader = WebGLHelpers.getShader(gl, "shader-fs");
+    var vertexShader = WebGLHelpers.getShader(gl, "shader-vs");
 
     var shaderProgram = gl.createProgram();
     gl.attachShader(shaderProgram, vertexShader);
@@ -77,20 +38,20 @@
   }
 
   var initBuffers = function(gl) {
-    var verticiesBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, verticiesBuffer);
+    var verticesBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
 
-    var verticies = [
+    var vertices = [
       1.0, 1.0, 0.0, 
       -1.0, 1.0,  0.0,
       1.0,  -1.0, 0.0,
-      -1.0,  -1.0, 0.0,
+      1.0,  -1.0, 0.0
     ];
 
     gl.bufferData(
-      gl.ARRAY_BUFFER, new Float32Array(verticies), gl.STATIC_DRAW
+      gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW
     );
-    return verticiesBuffer;
+    return verticesBuffer;
   };
 
   var initColorBuffer = function(gl) {
@@ -128,14 +89,14 @@
   }
 
   var horizAspect = 480.0/640.0;
-  var drawScene = function(gl, program, verticiesBuffer, squareVerticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
+  var drawScene = function(gl, program, verticesBuffer, squareVerticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     var perspectiveMatrix = makePerspective(45, horizAspect, 0.1, 100.0);
 
     loadIdentity();
     mvTranslate(cameraPosition);
     
-    gl.bindBuffer(gl.ARRAY_BUFFER, verticiesBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
     gl.vertexAttribPointer(
       vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0
     );
@@ -149,7 +110,7 @@
 
   var startRenderLoop = function(gl) {
     var time = 0.0;
-    var verticiesBuffer = initBuffers(gl)
+    var verticesBuffer = initBuffers(gl)
     var colorBuffer = initColorBuffer(gl);
     var shaderProgram = initShaders(gl);
     var vertexPositionAttribute = initVertexPositionAttribute(
@@ -162,24 +123,24 @@
     var cameraPosition = [0.0, 0.0, -6.0];
 
     renderLoop(
-      gl, time, verticiesBuffer, colorBuffer, shaderProgram,
+      gl, time, verticesBuffer, colorBuffer, shaderProgram,
       vertexPositionAttribute, vertexColorAttribute, cameraPosition
     );
   }
 
   var renderLoop = function(
-    gl, time, verticiesBuffer, colorBuffer, shaderProgram,
+    gl, time, verticesBuffer, colorBuffer, shaderProgram,
     vertexPositionAttribute, vertexColorAttribute, cameraPosition
   ) {
     cameraPosition = updateWorld(time, cameraPosition);
     drawScene(
-      gl, shaderProgram, verticiesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
+      gl, shaderProgram, verticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
     );
 
     setTimeout(function() {
       time += 16;
       renderLoop(
-        gl, time, verticiesBuffer, colorBuffer, shaderProgram,
+        gl, time, verticesBuffer, colorBuffer, shaderProgram,
         vertexPositionAttribute, vertexColorAttribute, cameraPosition
       )
     }, 250);//16); // roughly 60FPS

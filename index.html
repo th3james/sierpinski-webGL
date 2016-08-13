@@ -1,7 +1,7 @@
 <html>
   <head>
     <script id="shader-vs" type="x-shader/x-vertex">
-      attribute vec3 aVertexPosition;
+      attribute vec4 aVertexPosition;
       attribute vec4 aVertexColor;
 
       uniform mat4 uMVMatrix;
@@ -10,7 +10,7 @@
       varying lowp vec4 vColor;
       
       void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        gl_Position = uPMatrix * uMVMatrix * aVertexPosition;
         vColor = aVertexColor;
       }
     </script>

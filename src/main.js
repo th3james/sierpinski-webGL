@@ -116,8 +116,8 @@
       gl.FLOAT, false, 0, 0
     );
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, verticesColorBuffer);
-    gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
+    //gl.bindBuffer(gl.ARRAY_BUFFER, verticesColorBuffer);
+    //gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
 
     var vertCount = verticesBuffer.numItems * verticesBuffer.itemSize
     gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -131,9 +131,9 @@
     var vertexPositionAttribute = initVertexPositionAttribute(
       gl, shaderProgram
     );
-    var vertexColorAttribute = initVertexColorAttribute(
+    var vertexColorAttribute = null /*initVertexColorAttribute(
       gl, shaderProgram
-    );
+    );*/
 
     var cameraPosition = [0.0, 0.0, -8.0];
 

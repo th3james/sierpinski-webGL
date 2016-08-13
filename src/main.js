@@ -67,19 +67,19 @@
     return squareVerticesColorBuffer;
   }
 
-  var loadIdentity = function() {
-    mvMatrix = Matrix.I(4);
+  var identity = function() {
+    return Matrix.I(4);
   }
 
-  var multMatrix = function(m) {
-    mvMatrix = mvMatrix.x(m);
+  var calculateMvMatrix = function(identity, cameraPosition) {
+    return identity.x(
+      Matrix.Translation($V([
+        cameraPosition[0], cameraPosition[1], cameraPosition[2]
+      ])).ensure4x4()
+    );
   }
 
-  var mvTranslate = function(v) {
-    multMatrix(Matrix.Translation($V([v[0], v[1], v[2]])).ensure4x4());
-  }
-
-  var setMatrixUniforms = function(perspectiveMatrix, shaderProgram) {
+  var setMatrixUniforms = function(perspectiveMatrix, mvMatrix, shaderProgram) {
     var pUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
     gl.uniformMatrix4fv(pUniform, false, new Float32Array(perspectiveMatrix.flatten()));
 
@@ -90,10 +90,9 @@
   var horizAspect = 480.0/640.0;
   var drawScene = function(gl, program, verticesBuffer, squareVerticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    var perspectiveMatrix = makePerspective(45, horizAspect, 0.1, 100.0);
 
-    loadIdentity();
-    mvTranslate(cameraPosition);
+    var perspectiveMatrix = makePerspective(45, horizAspect, 0.1, 100.0);
+    var mvMatrix = calculateMvMatrix(identity(), cameraPosition);
     
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
     gl.vertexAttribPointer(
@@ -103,7 +102,7 @@
     gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesColorBuffer);
     gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
 
-    setMatrixUniforms(perspectiveMatrix, program);
+    setMatrixUniforms(perspectiveMatrix, mvMatrix, program);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
   }
 

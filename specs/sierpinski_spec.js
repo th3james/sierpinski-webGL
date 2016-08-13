@@ -12,9 +12,25 @@ describe("Sierpinski", function() {
 
   describe(".generateVertices", function() {
     it("returns 3 triangles from the given triangle", function() {
-      expect(Sierpinski.generateVertices().length).toEqual(
-        2*3*3
-      );
+      var expectedTriangles = [
+        0,1,
+        -0.5,0,
+        0.5,0,
+        -1,-1,
+        0,-1,
+        -0.5,0,
+        1,-1,
+        0.5,0,
+        0,-1
+      ];
+      var result = Sierpinski.generateVertices([
+        0.0, 1.0,
+        -1.0, -1.0,
+        1.0, -1.0,
+      ]);
+
+      expect(result.length).toEqual(2*3*3);
+      expect(result).toEqual(expectedTriangles);
     });
   });
 });

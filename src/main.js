@@ -41,7 +41,12 @@
     var verticesBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
 
-    var vertices = Sierpinski.generateVertices();
+    var startTriangle = [
+      0.0, 1.0,
+      -1.0, -1.0,
+      1.0, -1.0,
+    ]
+    var vertices = Sierpinski.generateVertices(startTriangle);
 
     gl.bufferData(
       gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW

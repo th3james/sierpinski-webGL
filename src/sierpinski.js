@@ -7,13 +7,7 @@
     return [xMid, yMid];
   }
 
-  Sierpinski.generateVertices = function() {
-    startTriangle = [
-      0.0, 1.0,
-      -1.0, -1.0,
-      1.0, -1.0,
-    ];
-
+  Sierpinski.generateVertices = function(startTriangle) {
     newTriangles = []
     for(var i = 0; i < startTriangle.length; i += 2) {
       var root = startTriangle.slice(i, i+2);

@@ -11,14 +11,16 @@ describe("Sierpinski", function() {
   });
 
   describe(".generateVertices", function() {
-    it("returns 3 triangles from the given triangle", function() {
+    it("returns 3 triangles from the given triangle when level: 1", function() {
       var expectedTriangles = [
         0,1,
         -0.5,0,
-        0.5,0,
+        0.5,0
+          ,
         -1,-1,
         0,-1,
-        -0.5,0,
+        -0.5,0
+          ,
         1,-1,
         0.5,0,
         0,-1
@@ -27,10 +29,20 @@ describe("Sierpinski", function() {
         0.0, 1.0,
         -1.0, -1.0,
         1.0, -1.0,
-      ]);
+      ], 1);
 
       expect(result.length).toEqual(2*3*3);
       expect(result).toEqual(expectedTriangles);
+    });
+
+    it("returns 9 triangles from the given triangle when level: 2", function() {
+      var result = Sierpinski.generateVertices([
+        0.0, 1.0,
+        -1.0, -1.0,
+        1.0, -1.0,
+      ], 2);
+
+      expect(result.length).toEqual(2*3*3*3);
     });
   });
 });

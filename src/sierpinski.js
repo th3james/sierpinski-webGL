@@ -7,20 +7,39 @@
     return [xMid, yMid];
   }
 
-  Sierpinski.generateVertices = function(startTriangle) {
-    newTriangles = []
-    for(var i = 0; i < startTriangle.length; i += 2) {
-      var root = startTriangle.slice(i, i+2);
-      for(var p = 0; p < startTriangle.length; p += 2) {
-        var pointOffset = (i+p)%startTriangle.length;
-        var point = startTriangle.slice(pointOffset, pointOffset + 2);
+  Sierpinski.generateVertices = function(startTriangle, levels) {
+    newTriangles = [];
 
-        var mid = Sierpinski.midPoint(root[0], root[1], point[0], point[1]);
+    // for each vertex
+    for(var i = 0; i < startTriangle.length; i += 2) {
+      var rootVertex = startTriangle.slice(i, i+2);
+
+      // for each other vertex
+      for(var p = 0; p < startTriangle.length; p += 2) {
+        var offset = (i+p)%startTriangle.length;
+        var otherVertex = startTriangle.slice(offset, offset + 2);
+
+        var mid = Sierpinski.midPoint(
+          rootVertex[0], rootVertex[1], otherVertex[0], otherVertex[1]
+        );
         newTriangles.push(mid[0])
         newTriangles.push(mid[1]);
       }
     }
 
-    return newTriangles;
+    if (levels === 1) {
+      return newTriangles;
+    } else {
+      var thirdLength = newTriangles.length/3;
+
+      return [0,1,2].map(function(i) {
+        return Sierpinski.generateVertices(
+          newTriangles.slice(i*thirdLength, (i+1)*thirdLength),
+          levels - 1
+        );
+      }).reduce(function(allSubTriangles, subTriangles) {
+        return allSubTriangles.concat(subTriangles);
+      });
+    }
   };
 })();

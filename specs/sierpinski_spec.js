@@ -9,4 +9,12 @@ describe("Sierpinski", function() {
       ).toEqual([0.0, 0.0]);
     });
   });
+
+  describe(".generateVertices", function() {
+    it("returns 3 triangles from the given triangle", function() {
+      expect(Sierpinski.generateVertices().length).toEqual(
+        2*3*3
+      );
+    });
+  });
 });

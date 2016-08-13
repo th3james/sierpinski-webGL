@@ -77,20 +77,20 @@
   }
 
   var initBuffers = function(gl) {
-    var squareVerticesBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
+    var verticiesBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, verticiesBuffer);
 
     var verticies = [
       1.0, 1.0, 0.0, 
       -1.0, 1.0,  0.0,
       1.0,  -1.0, 0.0,
-      -1.0, -1.0, 0.0
+      -1.0,  -1.0, 0.0,
     ];
 
     gl.bufferData(
       gl.ARRAY_BUFFER, new Float32Array(verticies), gl.STATIC_DRAW
     );
-    return squareVerticesBuffer;
+    return verticiesBuffer;
   };
 
   var initColorBuffer = function(gl) {
@@ -128,14 +128,14 @@
   }
 
   var horizAspect = 480.0/640.0;
-  var drawScene = function(gl, program, squareVerticesBuffer, squareVerticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
+  var drawScene = function(gl, program, verticiesBuffer, squareVerticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     var perspectiveMatrix = makePerspective(45, horizAspect, 0.1, 100.0);
 
     loadIdentity();
     mvTranslate(cameraPosition);
     
-    gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, verticiesBuffer);
     gl.vertexAttribPointer(
       vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0
     );
@@ -149,7 +149,7 @@
 
   var startRenderLoop = function(gl) {
     var time = 0.0;
-    var squareVerticesBuffer = initBuffers(gl)
+    var verticiesBuffer = initBuffers(gl)
     var colorBuffer = initColorBuffer(gl);
     var shaderProgram = initShaders(gl);
     var vertexPositionAttribute = initVertexPositionAttribute(
@@ -162,27 +162,27 @@
     var cameraPosition = [0.0, 0.0, -6.0];
 
     renderLoop(
-      gl, time, squareVerticesBuffer, colorBuffer, shaderProgram,
+      gl, time, verticiesBuffer, colorBuffer, shaderProgram,
       vertexPositionAttribute, vertexColorAttribute, cameraPosition
     );
   }
 
   var renderLoop = function(
-    gl, time, squareVerticesBuffer, colorBuffer, shaderProgram,
+    gl, time, verticiesBuffer, colorBuffer, shaderProgram,
     vertexPositionAttribute, vertexColorAttribute, cameraPosition
   ) {
     cameraPosition = updateWorld(time, cameraPosition);
     drawScene(
-      gl, shaderProgram, squareVerticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
+      gl, shaderProgram, verticiesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
     );
 
     setTimeout(function() {
       time += 16;
       renderLoop(
-        gl, time, squareVerticesBuffer, colorBuffer, shaderProgram,
+        gl, time, verticiesBuffer, colorBuffer, shaderProgram,
         vertexPositionAttribute, vertexColorAttribute, cameraPosition
       )
-    }, 32);//16); // roughly 60FPS
+    }, 250);//16); // roughly 60FPS
   }
 
   var updateWorld = function(time, cameraPosition) {

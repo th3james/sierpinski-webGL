@@ -1,14 +1,4 @@
 (function() {
-  var initWebGL = function(canvas) {
-    gl = canvas.getContext("webgl") ||
-      canvas.getContext("experimental-webgl");
-    
-    if (!gl) {
-      alert("Unable to initialize WebGL. Your browser may not support it.");
-    }
-    
-    return gl;
-  };
 
   var getShader = function(gl, id, type) {
     var shaderScript, theSource, currentChild, shader;
@@ -192,7 +182,7 @@
         gl, time, squareVerticesBuffer, colorBuffer, shaderProgram,
         vertexPositionAttribute, vertexColorAttribute, cameraPosition
       )
-    }, 16); // roughly 60FPS
+    }, 32);//16); // roughly 60FPS
   }
 
   var updateWorld = function(time, cameraPosition) {
@@ -205,24 +195,7 @@
   
   window.start = function() {
     var canvas = document.getElementById("glcanvas");
-
-    // Initialize the GL context
-    var gl = initWebGL(canvas);
-    
-    // Only continue if WebGL is available and working
-    if (!gl) {
-      return;
-    }
-
-    // Set clear color to black, fully opaque
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    // Enable depth testing
-    gl.enable(gl.DEPTH_TEST);
-    // Near things obscure far things
-    gl.depthFunc(gl.LEQUAL);
-    // Clear the color as well as the depth buffer.
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    var gl = WebGLHelpers.initWebGL(canvas);
 
     startRenderLoop(gl)
   };

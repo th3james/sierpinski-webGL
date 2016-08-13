@@ -41,20 +41,13 @@
     var verticesBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
 
-    var vertices = [
-      -0.2, -0.5,
-      0.2, -0.5,
-      0.0, -0.8,
-      -0.2, -0.2,
-      0.2, -0.2,
-      0.0, 0.2,
-    ];
+    var vertices = Sierpinski.generateVertices();
 
     gl.bufferData(
       gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW
     );
     verticesBuffer.itemSize = 2;
-    verticesBuffer.numItems = vertices.length / (verticesBuffer.itemSize * 3);
+    verticesBuffer.numItems = vertices.length / verticesBuffer.itemSize
     return verticesBuffer;
   };
 
@@ -119,8 +112,7 @@
     //gl.bindBuffer(gl.ARRAY_BUFFER, verticesColorBuffer);
     //gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
 
-    var vertCount = verticesBuffer.numItems * verticesBuffer.itemSize
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    gl.drawArrays(gl.TRIANGLES, 0, verticesBuffer.numItems);
   }
 
   var startRenderLoop = function(gl) {

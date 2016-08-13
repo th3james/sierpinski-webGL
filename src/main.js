@@ -42,14 +42,16 @@
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
 
     var vertices = [
-      1.0, 1.0, 0.0, 
-      -1.0, 1.0,  0.0,
-      1.0,  -1.0, 0.0
+      0.0, 1.0, 0.0, 
+      -1.0, -1.0,  0.0,
+      1.0,  -1.0, 0.0,
     ];
 
     gl.bufferData(
       gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW
     );
+    verticesBuffer.itemSize = 3;
+    verticesBuffer.numItems = 1;
     return verticesBuffer;
   };
 
@@ -81,10 +83,18 @@
 
   var setMatrixUniforms = function(perspectiveMatrix, mvMatrix, shaderProgram) {
     var pUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-    gl.uniformMatrix4fv(pUniform, false, new Float32Array(perspectiveMatrix.flatten()));
+    gl.uniformMatrix4fv(
+      pUniform, false, new Float32Array(
+        perspectiveMatrix.flatten()
+      )
+    );
 
     var mvUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
-    gl.uniformMatrix4fv(mvUniform, false, new Float32Array(mvMatrix.flatten()));
+    gl.uniformMatrix4fv(
+      mvUniform, false, new Float32Array(
+        mvMatrix.flatten()
+      )
+    );
   }
 
   var horizAspect = 480.0/640.0;
@@ -93,17 +103,24 @@
 
     var perspectiveMatrix = makePerspective(45, horizAspect, 0.1, 100.0);
     var mvMatrix = calculateMvMatrix(identity(), cameraPosition);
+    setMatrixUniforms(perspectiveMatrix, mvMatrix, program);
     
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
-    gl.vertexAttribPointer(
-      vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0
-    );
+
+
+    for (var i=0; i < verticesBuffer.numItems; i++) {
+      gl.vertexAttribPointer(
+        vertexPositionAttribute, verticesBuffer.itemSize,
+        gl.FLOAT, false, 0, 4*i*verticesBuffer.itemSize
+      );
+    }
 
     gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesColorBuffer);
     gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
 
-    setMatrixUniforms(perspectiveMatrix, mvMatrix, program);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
+    var vertCount = verticesBuffer.numItems * verticesBuffer.itemSize
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, verticesBuffer.itemSize);
+
   }
 
   var startRenderLoop = function(gl) {

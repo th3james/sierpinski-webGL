@@ -42,16 +42,19 @@
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
 
     var vertices = [
-      0.0, 1.0, 0.0, 
-      -1.0, -1.0,  0.0,
-      1.0,  -1.0, 0.0,
+      -0.2, -0.5,
+      0.2, -0.5,
+      0.0, -0.8,
+      -0.2, -0.2,
+      0.2, -0.2,
+      0.0, 0.2,
     ];
 
     gl.bufferData(
       gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW
     );
-    verticesBuffer.itemSize = 3;
-    verticesBuffer.numItems = 1;
+    verticesBuffer.itemSize = 2;
+    verticesBuffer.numItems = vertices.length / (verticesBuffer.itemSize * 3);
     return verticesBuffer;
   };
 
@@ -60,13 +63,15 @@
       1.0,  1.0,  1.0,  1.0,    // white
       1.0,  0.0,  0.0,  1.0,    // red
       0.0,  1.0,  0.0,  1.0,    // green
-      0.0,  0.0,  1.0,  1.0     // blue
+      0.0,  0.0,  1.0,  1.0,     // blue
+      1.0,  1.0,  1.0,  1.0,    // white
+      1.0,  0.0,  0.0,  1.0,    // red
     ];
 
-    var squareVerticesColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesColorBuffer);
+    var verticesColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, verticesColorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    return squareVerticesColorBuffer;
+    return verticesColorBuffer;
   }
 
   var identity = function() {
@@ -98,7 +103,7 @@
   }
 
   var horizAspect = 480.0/640.0;
-  var drawScene = function(gl, program, verticesBuffer, squareVerticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
+  var drawScene = function(gl, program, verticesBuffer, verticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     var perspectiveMatrix = makePerspective(45, horizAspect, 0.1, 100.0);
@@ -106,21 +111,16 @@
     setMatrixUniforms(perspectiveMatrix, mvMatrix, program);
     
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
+    gl.vertexAttribPointer(
+      vertexPositionAttribute, verticesBuffer.itemSize,
+      gl.FLOAT, false, 0, 0
+    );
 
-
-    for (var i=0; i < verticesBuffer.numItems; i++) {
-      gl.vertexAttribPointer(
-        vertexPositionAttribute, verticesBuffer.itemSize,
-        gl.FLOAT, false, 0, 4*i*verticesBuffer.itemSize
-      );
-    }
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesColorBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, verticesColorBuffer);
     gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
 
     var vertCount = verticesBuffer.numItems * verticesBuffer.itemSize
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, verticesBuffer.itemSize);
-
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
   }
 
   var startRenderLoop = function(gl) {
@@ -135,7 +135,7 @@
       gl, shaderProgram
     );
 
-    var cameraPosition = [0.0, 0.0, -6.0];
+    var cameraPosition = [0.0, 0.0, -8.0];
 
     renderLoop(
       gl, time, verticesBuffer, colorBuffer, shaderProgram,
@@ -158,7 +158,7 @@
         gl, time, verticesBuffer, colorBuffer, shaderProgram,
         vertexPositionAttribute, vertexColorAttribute, cameraPosition
       )
-    }, 250);//16); // roughly 60FPS
+    }, 16); // roughly 60FPS
   }
 
   var updateWorld = function(time, cameraPosition) {

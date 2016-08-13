@@ -157,6 +157,52 @@
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
+  var startRenderLoop = function(gl) {
+    var time = 0.0;
+    var squareVerticesBuffer = initBuffers(gl)
+    var colorBuffer = initColorBuffer(gl);
+    var shaderProgram = initShaders(gl);
+    var vertexPositionAttribute = initVertexPositionAttribute(
+      gl, shaderProgram
+    );
+    var vertexColorAttribute = initVertexColorAttribute(
+      gl, shaderProgram
+    );
+
+    var cameraPosition = [0.0, 0.0, -6.0];
+
+    renderLoop(
+      gl, time, squareVerticesBuffer, colorBuffer, shaderProgram,
+      vertexPositionAttribute, vertexColorAttribute, cameraPosition
+    );
+  }
+
+  var renderLoop = function(
+    gl, time, squareVerticesBuffer, colorBuffer, shaderProgram,
+    vertexPositionAttribute, vertexColorAttribute, cameraPosition
+  ) {
+    cameraPosition = updateWorld(time, cameraPosition);
+    drawScene(
+      gl, shaderProgram, squareVerticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
+    );
+
+    setTimeout(function() {
+      time += 16;
+      renderLoop(
+        gl, time, squareVerticesBuffer, colorBuffer, shaderProgram,
+        vertexPositionAttribute, vertexColorAttribute, cameraPosition
+      )
+    }, 16); // roughly 60FPS
+  }
+
+  var updateWorld = function(time, cameraPosition) {
+    cameraPosition[2] += 0.02;
+    if (cameraPosition[2] >= -3) {
+      cameraPosition[2] = -8.0;
+    }
+    return cameraPosition;
+  }
+  
   window.start = function() {
     var canvas = document.getElementById("glcanvas");
 
@@ -178,26 +224,7 @@
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.viewport(0, 0, canvas.width, canvas.height);
 
-    var squareVerticesBuffer = initBuffers(gl)
-    var colorBuffer = initColorBuffer(gl);
-    var shaderProgram = initShaders(gl);
-    var vertexPositionAttribute = initVertexPositionAttribute(
-      gl, shaderProgram
-    );
-    var vertexColorAttribute = initVertexColorAttribute(
-      gl, shaderProgram
-    );
-
-    var cameraPosition = [0.0, 0.0, -6.0];
-    drawScene(
-      gl, shaderProgram, squareVerticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
-    );
-    setTimeout(function() {
-      cameraPosition = [-0.5, 0.2, -4.0];
-      drawScene(
-        gl, shaderProgram, squareVerticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
-      );
-    }, 3000)
+    startRenderLoop(gl)
   };
 
 

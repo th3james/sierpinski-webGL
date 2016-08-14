@@ -100,8 +100,7 @@
 
     renderLoop(
       gl, time, initialTriangles, horizAspect, verticesBuffer,
-      shaderProgram, vertexPositionAttribute, 
-      cameraPosition
+      shaderProgram, vertexPositionAttribute, cameraPosition
     );
   };
   

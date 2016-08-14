@@ -28,7 +28,7 @@
       }
     }
 
-    if (levels === 1) {
+    if (levels <= 1) {
       return newTriangles;
     } else {
       var thirdLength = newTriangles.length/3;

@@ -25,6 +25,10 @@
             var dragEv = ev.originalEvent;
             var deltaX = dragStart.x - dragEv.screenX;
             var deltaY = dragStart.y - dragEv.screenY;
+            // reset dragStart
+            dragStart = {
+              x: dragEv.screenX, y: dragEv.screenY,
+            };
             callback(
               deltaX*(1/width),
               deltaY*(1/height)

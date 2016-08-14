@@ -48,4 +48,23 @@ describe("canvasEventStream", function () {
     var expectedY = (240 - 250)*(1/canvasHeight);
     expect(dragListener).toHaveBeenCalledWith(0, expectedY);
   });
+
+  it("triggers triggering two drag events emits both events correctly", function() {
+    var $canvas = makeFakeCanvas();
+    var eventStream = CanvasEventStream($canvas);
+    var dragListener = jasmine.createSpy('spy');
+    eventStream.onDrag(dragListener);
+
+    triggerFakeMouseDown($canvas, {x: 320, y: 240});
+    triggerFakeMouseMove($canvas, {x: 320, y: 250});
+    var expectedY = (240 - 250)*(1/canvasHeight);
+    triggerFakeMouseMove($canvas, {x: 300, y: 250});
+    var expectedX = (320 - 300)*(1/canvasWidth);
+    expect(dragListener).toHaveBeenCalledWith(
+      0, expectedY
+    );
+    expect(dragListener).toHaveBeenCalledWith(
+      expectedX, 0
+    );
+  });
 });

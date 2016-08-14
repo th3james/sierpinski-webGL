@@ -46,7 +46,7 @@
   };
 
   var setBufferData = function (gl, verticesBuffer, data) {
-    var vertices = Sierpinski.generateVertices(data, 11);
+    var vertices = Sierpinski.generateVertices(data, 8);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
     gl.bufferData(
@@ -54,7 +54,7 @@
     );
     verticesBuffer.itemSize = 2;
     verticesBuffer.numItems = vertices.length / verticesBuffer.itemSize;
-  }
+  };
 
   var initColorBuffer = function (gl) {
     var colors = [
@@ -96,39 +96,51 @@
   var TICK_WAIT = 16; // roughly 60FPS
   var zoomingIn = true;
   var zoomSpeed = 0.02;
-  var updateWorld = function (time, cameraPosition) {
+  var updateWorld = function (time, triangles, cameraPosition) {
     time += TICK_WAIT;
+
+    /*
+    // camera
     if (zoomingIn) {
       cameraPosition[2] += zoomSpeed;
     } else {
-      cameraPosition[2] -= zoomSpeed;
+      //cameraPosition[2] -= zoomSpeed;
     }
     if (cameraPosition[2] >= -0.2) {
       zoomingIn = false;
     } else if (cameraPosition[2] <= -4.0) {
       zoomingIn = true;
     }
+    */
+
+    // triangles
+    //triangles = Sierpinski.selectTrianglesInside(triangles, 0.5, 0.5);
+
     return cameraPosition;
   };
 
   var renderLoop = function (
-    gl, time, horizAspect, verticesBuffer, colorBuffer, shaderProgram,
-    vertexPositionAttribute, vertexColorAttribute, cameraPosition
+    gl, time, triangles, horizAspect, verticesBuffer, colorBuffer,
+    shaderProgram, vertexPositionAttribute, vertexColorAttribute,
+    cameraPosition
   ) {
-    cameraPosition = updateWorld(time, cameraPosition);
+    cameraPosition = updateWorld(time, triangles, cameraPosition);
     drawScene(
       gl, shaderProgram, horizAspect, verticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
     );
 
     setTimeout(function() {
       renderLoop(
-        gl, time, horizAspect, verticesBuffer, colorBuffer, shaderProgram,
-        vertexPositionAttribute, vertexColorAttribute, cameraPosition
+        gl, time, triangles, horizAspect, verticesBuffer, colorBuffer,
+        shaderProgram, vertexPositionAttribute, vertexColorAttribute,
+        cameraPosition
       );
     }, TICK_WAIT); 
   };
 
-  var startRenderLoop = function(gl, canvasEvents, initialTriangles) {
+  var startRenderLoop = function(
+    gl, canvasEvents, sliderEvents, initialTriangles
+  ) {
     var time = 0.0;
     var verticesBuffer = initBuffers(gl, initialTriangles);
     var colorBuffer = null; //initColorBuffer(gl);
@@ -141,16 +153,23 @@
     );*/
 
     var horizAspect = 480.0/640.0;
-    var cameraPosition = [0.0, 0.0, -8.0];
+    var MIN_ZOOM = -4.0;
+    var MAX_ZOOM = -0.1;
+    var cameraPosition = [0.0, 0.0, MIN_ZOOM];
 
     canvasEvents.onDrag(function (x, y) {
       cameraPosition[0] += x;
       cameraPosition[1] += y;
     });
 
+    sliderEvents.onChange(function (zoomPercent) {
+      cameraPosition[2] = MIN_ZOOM + (MAX_ZOOM-MIN_ZOOM)*zoomPercent;
+    });
+
     renderLoop(
-      gl, time, horizAspect, verticesBuffer, colorBuffer, shaderProgram,
-      vertexPositionAttribute, vertexColorAttribute, cameraPosition
+      gl, time, initialTriangles, horizAspect, verticesBuffer, colorBuffer,
+      shaderProgram, vertexPositionAttribute, vertexColorAttribute,
+      cameraPosition
     );
   };
   
@@ -159,14 +178,17 @@
     var canvas = $canvas[0];
 
     var gl = WebGLHelpers.initWebGL(canvas);
-
     var canvasEvents = CanvasEventStream($canvas);
+
+    var $slider = $("#zoom-slider");
+    var sliderEvents = SliderEventStream($slider);
+
     var startTriangle = [
       0.0, 1.0,
       -1.0, -1.0,
       1.0, -1.0,
     ];
-    startRenderLoop(gl, canvasEvents, startTriangle);
+    startRenderLoop(gl, canvasEvents, sliderEvents, startTriangle);
   };
 
 }());

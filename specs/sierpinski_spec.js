@@ -63,4 +63,10 @@ describe("Sierpinski", function() {
       );
     });
   });
+
+  describe("selectTrianglesInside", function () {
+    xit("returns the triangle if given a tringle with a point inside the constraint", function () {
+
+    });
+  });
 });

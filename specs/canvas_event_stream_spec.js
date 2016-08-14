@@ -1,4 +1,4 @@
-describe("canvasEventStream", function () {
+describe("CanvasEventStream", function () {
   var canvasWidth = 640,
     canvasHeight = 480;
   var makeFakeCanvas = function () {

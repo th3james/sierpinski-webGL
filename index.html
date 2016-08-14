@@ -24,11 +24,13 @@
     <script src="src/webgl_helpers.js" type="text/javascript"></script>
     <script src="src/sierpinski.js" type="text/javascript"></script>
     <script src="src/canvas_event_stream.js" type="text/javascript"></script>
+    <script src="src/slider_event_stream.js" type="text/javascript"></script>
     <script src="src/main.js" type="text/javascript"></script>
   </head>
   <body onload="start()">
     <h1>Sierpinski's Triangle rendered in WebGL</h1>
     <h3>by James Cox-Morton (th3james)</h3>
+    <label>Zoom: </label><input id="zoom-slider" type="range" value="0"/>
     <canvas id="glcanvas" width="640" height="480">
       Your browser doesn't appear to support the 
       <code>&lt;canvas&gt;</code> element.

@@ -13,17 +13,17 @@ describe("Sierpinski", function() {
   describe(".generateVertices", function() {
     it("returns 3 triangles from the given triangle when level: 1", function() {
       var expectedTriangles = [
-        0,1,
-        -0.5,0,
-        0.5,0
-          ,
-        -1,-1,
-        0,-1,
-        -0.5,0
-          ,
-        1,-1,
-        0.5,0,
-        0,-1
+         0, 1,
+         -0.5, 0,
+         0.5, 0,
+
+         -0.5, 0,
+         -1, -1,
+         0, -1,
+
+         0.5, 0,
+         0, -1,
+         1, -1
       ];
       var result = Sierpinski.generateVertices([
         0.0, 1.0,

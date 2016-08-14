@@ -8,6 +8,12 @@
     return [xMid, yMid];
   };
 
+  var eachPair = function (arr, fn) {
+    for(var i = 0; i < arr.length; i += 2) {
+      fn(arr.slice(i, i+2), i);
+    }
+  };
+
   var partitionThirds = function (arr) {
     var thirdLength = arr.length/3;
 
@@ -22,21 +28,16 @@
     var newTriangles = [];
 
     // for each vertex
-    for(var i = 0; i < startTriangle.length; i += 2) {
-      var rootVertex = startTriangle.slice(i, i+2);
-
+    eachPair(startTriangle, function(rootVertex) {
       // for each other vertex
-      for(var p = 0; p < startTriangle.length; p += 2) {
-        var offset = (i+p)%startTriangle.length;
-        var otherVertex = startTriangle.slice(offset, offset + 2);
-
+      eachPair(startTriangle, function(otherVertex) {
         var mid = Sierpinski.midPoint(
           rootVertex[0], rootVertex[1], otherVertex[0], otherVertex[1]
         );
         newTriangles.push(mid[0]);
         newTriangles.push(mid[1]);
-      }
-    }
+      });
+    });
 
     if (levels <= 1) {
       return newTriangles;

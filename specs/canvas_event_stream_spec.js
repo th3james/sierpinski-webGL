@@ -5,7 +5,9 @@ describe("canvasEventStream", function () {
     return $('<canvas width="' + canvasWidth + '" height="' + canvasHeight + '"></canvas>');
   };
   var triggerFakeMouseDown = function ($el, position) {
-    $el.trigger({type: 'mousedown', originalEvent: position});
+    $el.trigger({type: 'mousedown', originalEvent: {
+      screenX: position.x, screenY: position.y
+    }});
   };
   var triggerFakeMouseMove = function ($el, position) {
     $el.trigger({type: 'mousemove', originalEvent: {

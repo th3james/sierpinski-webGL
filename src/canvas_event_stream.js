@@ -11,7 +11,7 @@
 
     $canvas.on('mousedown', function (ev) {
       var clickEv = ev.originalEvent;
-      dragStart = {x: clickEv.x, y: clickEv.y};
+      dragStart = {x: clickEv.screenX, y: clickEv.screenY};
       dragging = true;
     });
     $canvas.on('mouseup', function () {

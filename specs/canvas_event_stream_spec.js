@@ -1,6 +1,8 @@
 describe("canvasEventStream", function () {
+  var canvasWidth = 640,
+    canvasHeight = 480;
   var makeFakeCanvas = function () {
-    return $('<canvas width="640" height="480"></canvas>');
+    return $('<canvas width="' + canvasWidth + '" height="' + canvasHeight + '"></canvas>');
   };
   var triggerFakeMouseDown = function ($el, position) {
     $el.trigger({type: 'mousedown', originalEvent: position});
@@ -29,6 +31,7 @@ describe("canvasEventStream", function () {
 
     triggerFakeMouseDown($canvas, {x: 320, y: 240});
     triggerFakeMouseMove($canvas, {x: 300, y: 240});
-    expect(dragListener).toHaveBeenCalled();
+    var expectedX = (320 - 300)*(1/canvasWidth);
+    expect(dragListener).toHaveBeenCalledWith(expectedX, 0);
   });
 });

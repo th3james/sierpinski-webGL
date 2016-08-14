@@ -23,7 +23,7 @@
         $canvas.on('mousemove', function (ev) {
           if (dragging) {
             var dragEv = ev.originalEvent;
-            var deltaX = dragEv.screenX - dragStart.x;
+            var deltaX = dragStart.x - dragEv.screenX;
             var deltaY = dragEv.screenY - dragStart.y;
             callback(
               deltaX*(1/width),

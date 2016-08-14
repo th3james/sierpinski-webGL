@@ -3,6 +3,7 @@ body {
 }
 
 .container {
+  border-radius: 5px;
   width: 640px;
   margin: 0 auto;
   background-color: white;
@@ -22,4 +23,19 @@ h3 {
   font-size: 1.05em;
   margin: 0 0 15px;
   color: #444;
+}
+
+.controls {
+  padding: 5px 0;
+  overflow: hidden;
+}
+
+.controls .zoom-controls {
+  float: right;
+}
+
+#zoom-slider {
+  margin-left: 10px;
+  width: 200px;
+  float: right;
 }

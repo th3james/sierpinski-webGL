@@ -33,8 +33,12 @@
     <div class="container">
       <h1>Sierpinski's Triangle rendered in WebGL</h1>
       <h3>by James Cox-Morton (th3james@fastmail.fn)</h3>
-      <div>
-        <label>Zoom: </label><input id="zoom-slider" type="range" value="0"/>
+      <div class="controls">
+        <span>Drag to pan</span>
+        <span class="zoom-controls">
+          <span>Zoom: </span>
+          <input id="zoom-slider" type="range" value="0"/>
+        </span>
       </div>
       <canvas id="glcanvas" width="640" height="480">
         Your browser doesn't appear to support the 

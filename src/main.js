@@ -48,7 +48,10 @@
     verticesBuffer.numItems = vertices.length / verticesBuffer.itemSize;
   };
 
-  var drawScene = function (gl, program, horizAspect, verticesBuffer, vertexPositionAttribute, cameraPosition) {
+  var drawScene = function (
+    gl, program, horizAspect, verticesBuffer, vertexPositionAttribute,
+    cameraPosition
+  ) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     var perspectiveMatrix = makePerspective(45, horizAspect, 0.1, 100.0);
@@ -101,7 +104,7 @@
     );
 
     var horizAspect = 480.0/640.0;
-    var MIN_ZOOM = -3.3;
+    var MIN_ZOOM = -3.25;
     var MAX_ZOOM = -0.2;
     var cameraPosition = [0.0, 0.0, MIN_ZOOM];
 

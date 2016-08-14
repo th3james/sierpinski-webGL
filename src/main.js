@@ -38,24 +38,23 @@
     return vertexColorAttribute;
   };
 
-  var initBuffers = function (gl) {
+  var initBuffers = function (gl, initialTriangles) {
     var verticesBuffer = gl.createBuffer();
+
+    setBufferData(gl, verticesBuffer, initialTriangles);
+    return verticesBuffer;
+  };
+
+  var setBufferData = function (gl, verticesBuffer, data) {
+    var vertices = Sierpinski.generateVertices(data, 11);
+
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
-
-    var startTriangle = [
-      0.0, 1.0,
-      -1.0, -1.0,
-      1.0, -1.0,
-    ];
-    var vertices = Sierpinski.generateVertices(startTriangle, 11);
-
     gl.bufferData(
       gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW
     );
     verticesBuffer.itemSize = 2;
     verticesBuffer.numItems = vertices.length / verticesBuffer.itemSize;
-    return verticesBuffer;
-  };
+  }
 
   var initColorBuffer = function (gl) {
     var colors = [
@@ -129,9 +128,9 @@
     }, TICK_WAIT); 
   };
 
-  var startRenderLoop = function(gl, canvasEvents) {
+  var startRenderLoop = function(gl, canvasEvents, initialTriangles) {
     var time = 0.0;
-    var verticesBuffer = initBuffers(gl);
+    var verticesBuffer = initBuffers(gl, initialTriangles);
     var colorBuffer = null; //initColorBuffer(gl);
     var shaderProgram = initShaders(gl);
     var vertexPositionAttribute = initVertexPositionAttribute(
@@ -162,7 +161,12 @@
     var gl = WebGLHelpers.initWebGL(canvas);
 
     var canvasEvents = CanvasEventStream($canvas);
-    startRenderLoop(gl, canvasEvents);
+    var startTriangle = [
+      0.0, 1.0,
+      -1.0, -1.0,
+      1.0, -1.0,
+    ];
+    startRenderLoop(gl, canvasEvents, startTriangle);
   };
 
 }());

@@ -63,6 +63,28 @@
     return shader;
   };
 
+  WebGLHelpers.initShaders = function (gl, fragmentSelector, vertexSelector) {
+    var fragmentShader = WebGLHelpers.getShader(gl, fragmentSelector);
+    var vertexShader = WebGLHelpers.getShader(gl, vertexSelector);
+
+    var shaderProgram = gl.createProgram();
+    gl.attachShader(shaderProgram, vertexShader);
+    gl.attachShader(shaderProgram, fragmentShader);
+    gl.linkProgram(shaderProgram);
+
+    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+      alert(
+        "Unable to initialize the shader program: " +
+          gl.getProgramInfoLog(shaderProgram)
+      );
+      throw "Can't init shader";
+    }
+
+    gl.useProgram(shaderProgram);
+
+    return shaderProgram;
+  };
+
   WebGLHelpers.identity = function () {
     return Matrix.I(4);
   };

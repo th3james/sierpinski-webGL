@@ -1,26 +1,5 @@
 (function () {
   'use strict';
-  var initShaders = function (gl) {
-    var fragmentShader = WebGLHelpers.getShader(gl, "shader-fs");
-    var vertexShader = WebGLHelpers.getShader(gl, "shader-vs");
-
-    var shaderProgram = gl.createProgram();
-    gl.attachShader(shaderProgram, vertexShader);
-    gl.attachShader(shaderProgram, fragmentShader);
-    gl.linkProgram(shaderProgram);
-
-    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-      alert(
-        "Unable to initialize the shader program: " +
-          gl.getProgramInfoLog(shaderProgram)
-      );
-      throw "Can't init shader";
-    }
-
-    gl.useProgram(shaderProgram);
-
-    return shaderProgram;
-  };
 
   var initVertexPositionAttribute = function (gl, program) {
     var vertexPositionAttribute = gl.getAttribLocation(
@@ -98,7 +77,9 @@
   ) {
     var time = 0.0;
     var verticesBuffer = initBuffers(gl, initialTriangles);
-    var shaderProgram = initShaders(gl);
+    var shaderProgram = WebGLHelpers.initShaders(
+      gl, "shader-fs", "shader-vs"
+    );
     var vertexPositionAttribute = initVertexPositionAttribute(
       gl, shaderProgram
     );

@@ -42,8 +42,8 @@
     if (levels <= 1) {
       return newTriangles;
     } else {
-      return partitionThirds(newTriangles).map(function (triangles) {
-        return Sierpinski.generateVertices(triangles, levels - 1);
+      return partitionThirds(newTriangles).map(function (triangle) {
+        return Sierpinski.generateVertices(triangle, levels - 1);
       }).reduce(function(allSubTriangles, subTriangles) {
         return allSubTriangles.concat(subTriangles);
       }, []);

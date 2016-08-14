@@ -14,7 +14,7 @@
       dragStart = {x: clickEv.screenX, y: clickEv.screenY};
       dragging = true;
     });
-    $canvas.on('mouseup', function () {
+    $(document).on('mouseup', function () {
       dragging = false;
     });
 

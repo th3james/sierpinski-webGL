@@ -1,28 +1,28 @@
 body {
-  background-color: grey;
+  background-color: #76B7A8;
 }
 
 .container {
   border-radius: 5px;
   width: 640px;
   margin: 0 auto;
-  background-color: white;
-  padding: 5px 20px 10px;
+  background-color: #96D8CC;
+  color: #1A1C17;
+  padding: 5px 20px 20px;
 }
 
-h1, h3 {
+h1, h3, .controls {
   font-family: Georgia;
 }
 
 h1 {
   font-size: 1.5em;
-  margin-bottom: 5px;
+  margin: 10px 0 5px 0;
 }
 
 h3 {
   font-size: 1.05em;
   margin: 0 0 15px;
-  color: #444;
 }
 
 .controls {

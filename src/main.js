@@ -49,24 +49,17 @@
   };
 
   var TICK_WAIT = 16; // roughly 60FPS
-  var updateWorld = function (time, triangles, cameraPosition) {
-    time += TICK_WAIT;
-
-    return cameraPosition;
-  };
-
   var renderLoop = function (
-    gl, time, triangles, horizAspect, verticesBuffer, shaderProgram,
+    gl, triangles, horizAspect, verticesBuffer, shaderProgram,
     vertexPositionAttribute, cameraPosition
   ) {
-    cameraPosition = updateWorld(time, triangles, cameraPosition);
     drawScene(
       gl, shaderProgram, horizAspect, verticesBuffer, vertexPositionAttribute, cameraPosition
     );
 
     setTimeout(function() {
       renderLoop(
-        gl, time, triangles, horizAspect, verticesBuffer, shaderProgram,
+        gl, triangles, horizAspect, verticesBuffer, shaderProgram,
         vertexPositionAttribute, cameraPosition
       );
     }, TICK_WAIT); 
@@ -75,7 +68,6 @@
   var startRenderLoop = function(
     gl, canvasEvents, sliderEvents, initialTriangles
   ) {
-    var time = 0.0;
     var verticesBuffer = initBuffers(gl, initialTriangles);
     var shaderProgram = WebGLHelpers.initShaders(
       gl, "shader-fs", "shader-vs"
@@ -99,7 +91,7 @@
     });
 
     renderLoop(
-      gl, time, initialTriangles, horizAspect, verticesBuffer,
+      gl, initialTriangles, horizAspect, verticesBuffer,
       shaderProgram, vertexPositionAttribute, cameraPosition
     );
   };

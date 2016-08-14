@@ -2,7 +2,7 @@
   window.WebGLHelpers = {};
 
   WebGLHelpers.initWebGL = function(canvas) {
-    gl = canvas.getContext("webgl") ||
+    var gl = canvas.getContext("webgl") ||
       canvas.getContext("experimental-webgl");
     
     if (!gl) {

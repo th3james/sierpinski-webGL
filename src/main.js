@@ -84,7 +84,7 @@
     );
   }
 
-  var setMatrixUniforms = function(perspectiveMatrix, mvMatrix, shaderProgram) {
+  var setMatrixUniforms = function(gl, perspectiveMatrix, mvMatrix, shaderProgram) {
     var pUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
     gl.uniformMatrix4fv(
       pUniform, false, new Float32Array(
@@ -100,13 +100,12 @@
     );
   }
 
-  var horizAspect = 480.0/640.0;
-  var drawScene = function(gl, program, verticesBuffer, verticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
+  var drawScene = function(gl, program, horizAspect, verticesBuffer, verticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     var perspectiveMatrix = makePerspective(45, horizAspect, 0.1, 100.0);
     var mvMatrix = calculateMvMatrix(identity(), cameraPosition);
-    setMatrixUniforms(perspectiveMatrix, mvMatrix, program);
+    setMatrixUniforms(gl, perspectiveMatrix, mvMatrix, program);
     
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
     gl.vertexAttribPointer(
@@ -132,27 +131,28 @@
       gl, shaderProgram
     );*/
 
+    var horizAspect = 480.0/640.0;
     var cameraPosition = [0.0, 0.0, -8.0];
 
     renderLoop(
-      gl, time, verticesBuffer, colorBuffer, shaderProgram,
+      gl, time, horizAspect, verticesBuffer, colorBuffer, shaderProgram,
       vertexPositionAttribute, vertexColorAttribute, cameraPosition
     );
   }
 
   var renderLoop = function(
-    gl, time, verticesBuffer, colorBuffer, shaderProgram,
+    gl, time, horizAspect, verticesBuffer, colorBuffer, shaderProgram,
     vertexPositionAttribute, vertexColorAttribute, cameraPosition
   ) {
     cameraPosition = updateWorld(time, cameraPosition);
     drawScene(
-      gl, shaderProgram, verticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
+      gl, shaderProgram, horizAspect, verticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
     );
 
     setTimeout(function() {
       time += 16;
       renderLoop(
-        gl, time, verticesBuffer, colorBuffer, shaderProgram,
+        gl, time, horizAspect, verticesBuffer, colorBuffer, shaderProgram,
         vertexPositionAttribute, vertexColorAttribute, cameraPosition
       )
     }, 16); // roughly 60FPS

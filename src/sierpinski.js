@@ -8,33 +8,34 @@
     return [xMid, yMid];
   };
 
-  var eachPair = function (arr, fn) {
+  var mapPairs = function (arr, fn) {
+    var result = []
     for(var i = 0; i < arr.length; i += 2) {
-      fn(arr.slice(i, i+2), i);
+      result.push(
+        fn(arr.slice(i, i+2), i)
+      );
     }
+    return result;
   };
 
   var flattenTriangles = function (triangles) {
-    return triangles.reduce(function(flattenedTriangle, triangle) {
-      return flattenedTriangle.concat(triangle);
+    return triangles.reduce(function(flattened, triangle) {
+      return flattened.concat(triangle);
     }, [])
   }
 
   window.Sierpinski.generateVertices = function(startTriangle, levels) {
-    var newTriangles = [];
-
-    // for each vertex
-    eachPair(startTriangle, function(rootVertex) {
-      // for each other vertex
-      var newTriangle = []
-      eachPair(startTriangle, function(otherVertex) {
-        var mid = Sierpinski.midPoint(
+    var newTriangles = mapPairs(startTriangle, function(rootVertex) {
+      // collect mid points between each vertex 
+      var midPoints = mapPairs(startTriangle, function(otherVertex) {
+        return Sierpinski.midPoint(
           rootVertex[0], rootVertex[1], otherVertex[0], otherVertex[1]
         );
-        newTriangle.push(mid[0]);
-        newTriangle.push(mid[1]);
-      });
-      newTriangles.push(newTriangle);
+      })
+
+      return midPoints.reduce(function (flatten, mid) {
+        return flatten.concat(mid);
+      }, []);
     });
 
     if (levels > 1) {

@@ -8,6 +8,8 @@
     "Sierpinski": true,
     "Matrix": true,
     "$V": true,
+    "$": true,
+    "canvasEventStream": true,
     "makePerspective": true
   },
   "strict": true,

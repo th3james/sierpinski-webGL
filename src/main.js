@@ -136,8 +136,8 @@
     var cameraPosition = [0.0, 0.0, -8.0];
 
     canvasEvents.onDrag(function (x, y) {
-      cameraPosition[0] = x;
-      cameraPosition[1] = y;
+      cameraPosition[0] += x;
+      cameraPosition[1] += y;
     });
 
     renderLoop(

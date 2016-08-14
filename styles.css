@@ -1,0 +1,25 @@
+body {
+  background-color: grey;
+}
+
+.container {
+  width: 640px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 5px 20px 10px;
+}
+
+h1, h3 {
+  font-family: Georgia;
+}
+
+h1 {
+  font-size: 1.5em;
+  margin-bottom: 5px;
+}
+
+h3 {
+  font-size: 1.05em;
+  margin: 0 0 15px;
+  color: #444;
+}

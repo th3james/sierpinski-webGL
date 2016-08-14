@@ -62,4 +62,32 @@
 
     return shader;
   };
+
+  WebGLHelpers.identity = function () {
+    return Matrix.I(4);
+  };
+
+  WebGLHelpers.calculateMvMatrix = function (identity, cameraPosition) {
+    return identity.x(
+      Matrix.Translation($V([
+        cameraPosition[0], cameraPosition[1], cameraPosition[2]
+      ])).ensure4x4()
+    );
+  };
+
+  WebGLHelpers.setMatrixUniforms = function (gl, perspectiveMatrix, mvMatrix, shaderProgram) {
+    var pUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
+    gl.uniformMatrix4fv(
+      pUniform, false, new Float32Array(
+        perspectiveMatrix.flatten()
+      )
+    );
+
+    var mvUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+    gl.uniformMatrix4fv(
+      mvUniform, false, new Float32Array(
+        mvMatrix.flatten()
+      )
+    );
+  };
 })();

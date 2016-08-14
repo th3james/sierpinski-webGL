@@ -73,40 +73,14 @@
     return verticesColorBuffer;
   };
 
-  var identity = function () {
-    return Matrix.I(4);
-  };
-
-  var calculateMvMatrix = function (identity, cameraPosition) {
-    return identity.x(
-      Matrix.Translation($V([
-        cameraPosition[0], cameraPosition[1], cameraPosition[2]
-      ])).ensure4x4()
-    );
-  };
-
-  var setMatrixUniforms = function (gl, perspectiveMatrix, mvMatrix, shaderProgram) {
-    var pUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-    gl.uniformMatrix4fv(
-      pUniform, false, new Float32Array(
-        perspectiveMatrix.flatten()
-      )
-    );
-
-    var mvUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
-    gl.uniformMatrix4fv(
-      mvUniform, false, new Float32Array(
-        mvMatrix.flatten()
-      )
-    );
-  };
-
   var drawScene = function (gl, program, horizAspect, verticesBuffer, verticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     var perspectiveMatrix = makePerspective(45, horizAspect, 0.1, 100.0);
-    var mvMatrix = calculateMvMatrix(identity(), cameraPosition);
-    setMatrixUniforms(gl, perspectiveMatrix, mvMatrix, program);
+    var mvMatrix = WebGLHelpers.calculateMvMatrix(
+      WebGLHelpers.identity(), cameraPosition
+    );
+    WebGLHelpers.setMatrixUniforms(gl, perspectiveMatrix, mvMatrix, program);
     
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
     gl.vertexAttribPointer(
@@ -173,6 +147,5 @@
 
     startRenderLoop(gl);
   };
-
 
 }());

@@ -8,6 +8,16 @@
     return [xMid, yMid];
   };
 
+  var partitionThirds = function (arr) {
+    var thirdLength = arr.length/3;
+
+    return [0,1,2].map(function(i) {
+      var start = i*thirdLength;
+      var end = (i+1)*thirdLength;
+      return arr.slice(start, end);
+    });
+  };
+
   window.Sierpinski.generateVertices = function(startTriangle, levels) {
     var newTriangles = [];
 
@@ -31,15 +41,8 @@
     if (levels <= 1) {
       return newTriangles;
     } else {
-      var thirdLength = newTriangles.length/3;
-
-      return [0,1,2].map(function(i) {
-        var start = i*thirdLength;
-        var end = (i+1)*thirdLength;
-        return Sierpinski.generateVertices(
-          newTriangles.slice(start, end),
-          levels - 1
-        );
+      return partitionThirds(newTriangles).map(function (triangles) {
+        return Sierpinski.generateVertices(triangles, levels - 1);
       }).reduce(function(allSubTriangles, subTriangles) {
         return allSubTriangles.concat(subTriangles);
       }, []);

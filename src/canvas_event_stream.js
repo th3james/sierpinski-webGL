@@ -30,7 +30,7 @@
               x: dragEv.screenX, y: dragEv.screenY,
             };
             callback(
-              deltaX*(1/width),
+              -(deltaX*(1/width)),
               deltaY*(1/height)
             );
           }

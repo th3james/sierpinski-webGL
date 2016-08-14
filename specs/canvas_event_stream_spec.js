@@ -33,7 +33,7 @@ describe("canvasEventStream", function () {
 
     triggerFakeMouseDown($canvas, {x: 320, y: 240});
     triggerFakeMouseMove($canvas, {x: 300, y: 240});
-    var expectedX = (320 - 300)*(1/canvasWidth);
+    var expectedX = -(320 - 300)*(1/canvasWidth);
     expect(dragListener).toHaveBeenCalledWith(expectedX, 0);
   });
 
@@ -46,7 +46,7 @@ describe("canvasEventStream", function () {
     triggerFakeMouseDown($canvas, {x: 320, y: 240});
     triggerFakeMouseMove($canvas, {x: 320, y: 250});
     var expectedY = (240 - 250)*(1/canvasHeight);
-    expect(dragListener).toHaveBeenCalledWith(0, expectedY);
+    expect(dragListener).toHaveBeenCalledWith(-0, expectedY);
   });
 
   it("triggers triggering two drag events emits both events correctly", function() {
@@ -59,9 +59,9 @@ describe("canvasEventStream", function () {
     triggerFakeMouseMove($canvas, {x: 320, y: 250});
     var expectedY = (240 - 250)*(1/canvasHeight);
     triggerFakeMouseMove($canvas, {x: 300, y: 250});
-    var expectedX = (320 - 300)*(1/canvasWidth);
+    var expectedX = -(320 - 300)*(1/canvasWidth);
     expect(dragListener).toHaveBeenCalledWith(
-      0, expectedY
+      -0, expectedY
     );
     expect(dragListener).toHaveBeenCalledWith(
       expectedX, 0

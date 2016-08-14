@@ -120,7 +120,7 @@
     }, 16); // roughly 60FPS
   };
 
-  var startRenderLoop = function(gl) {
+  var startRenderLoop = function(gl, canvasEvents) {
     var time = 0.0;
     var verticesBuffer = initBuffers(gl);
     var colorBuffer = null; //initColorBuffer(gl);
@@ -135,6 +135,11 @@
     var horizAspect = 480.0/640.0;
     var cameraPosition = [0.0, 0.0, -8.0];
 
+    canvasEvents.onDrag(function (x, y) {
+      cameraPosition[0] = x;
+      cameraPosition[1] = y;
+    });
+
     renderLoop(
       gl, time, horizAspect, verticesBuffer, colorBuffer, shaderProgram,
       vertexPositionAttribute, vertexColorAttribute, cameraPosition
@@ -142,10 +147,13 @@
   };
   
   window.start = function() {
-    var canvas = document.getElementById("glcanvas");
+    var $canvas = $("#glcanvas");
+    var canvas = $canvas[0];
+
     var gl = WebGLHelpers.initWebGL(canvas);
 
-    startRenderLoop(gl);
+    var canvasEvents = canvasEventStream($canvas);
+    startRenderLoop(gl, canvasEvents);
   };
 
 }());

@@ -30,14 +30,6 @@
     return vertexPositionAttribute;
   };
 
-  var initVertexColorAttribute = function (gl, program) {
-    var vertexColorAttribute = gl.getAttribLocation(
-      program, "aVertexColor"
-    );
-    gl.enableVertexAttribArray(vertexColorAttribute);
-    return vertexColorAttribute;
-  };
-
   var initBuffers = function (gl, initialTriangles) {
     var verticesBuffer = gl.createBuffer();
 
@@ -56,23 +48,7 @@
     verticesBuffer.numItems = vertices.length / verticesBuffer.itemSize;
   };
 
-  var initColorBuffer = function (gl) {
-    var colors = [
-      1.0,  1.0,  1.0,  1.0,    // white
-      1.0,  0.0,  0.0,  1.0,    // red
-      0.0,  1.0,  0.0,  1.0,    // green
-      0.0,  0.0,  1.0,  1.0,     // blue
-      1.0,  1.0,  1.0,  1.0,    // white
-      1.0,  0.0,  0.0,  1.0,    // red
-    ];
-
-    var verticesColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, verticesColorBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    return verticesColorBuffer;
-  };
-
-  var drawScene = function (gl, program, horizAspect, verticesBuffer, verticesColorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition) {
+  var drawScene = function (gl, program, horizAspect, verticesBuffer, vertexPositionAttribute, cameraPosition) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     var perspectiveMatrix = makePerspective(45, horizAspect, 0.1, 100.0);
@@ -87,53 +63,29 @@
       gl.FLOAT, false, 0, 0
     );
 
-    //gl.bindBuffer(gl.ARRAY_BUFFER, verticesColorBuffer);
-    //gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
-
     gl.drawArrays(gl.TRIANGLES, 0, verticesBuffer.numItems);
   };
 
   var TICK_WAIT = 16; // roughly 60FPS
-  var zoomingIn = true;
-  var zoomSpeed = 0.02;
   var updateWorld = function (time, triangles, cameraPosition) {
     time += TICK_WAIT;
-
-    /*
-    // camera
-    if (zoomingIn) {
-      cameraPosition[2] += zoomSpeed;
-    } else {
-      //cameraPosition[2] -= zoomSpeed;
-    }
-    if (cameraPosition[2] >= -0.2) {
-      zoomingIn = false;
-    } else if (cameraPosition[2] <= -4.0) {
-      zoomingIn = true;
-    }
-    */
-
-    // triangles
-    //triangles = Sierpinski.selectTrianglesInside(triangles, 0.5, 0.5);
 
     return cameraPosition;
   };
 
   var renderLoop = function (
-    gl, time, triangles, horizAspect, verticesBuffer, colorBuffer,
-    shaderProgram, vertexPositionAttribute, vertexColorAttribute,
-    cameraPosition
+    gl, time, triangles, horizAspect, verticesBuffer, shaderProgram,
+    vertexPositionAttribute, cameraPosition
   ) {
     cameraPosition = updateWorld(time, triangles, cameraPosition);
     drawScene(
-      gl, shaderProgram, horizAspect, verticesBuffer, colorBuffer, vertexPositionAttribute, vertexColorAttribute, cameraPosition
+      gl, shaderProgram, horizAspect, verticesBuffer, vertexPositionAttribute, cameraPosition
     );
 
     setTimeout(function() {
       renderLoop(
-        gl, time, triangles, horizAspect, verticesBuffer, colorBuffer,
-        shaderProgram, vertexPositionAttribute, vertexColorAttribute,
-        cameraPosition
+        gl, time, triangles, horizAspect, verticesBuffer, shaderProgram,
+        vertexPositionAttribute, cameraPosition
       );
     }, TICK_WAIT); 
   };
@@ -143,14 +95,10 @@
   ) {
     var time = 0.0;
     var verticesBuffer = initBuffers(gl, initialTriangles);
-    var colorBuffer = null; //initColorBuffer(gl);
     var shaderProgram = initShaders(gl);
     var vertexPositionAttribute = initVertexPositionAttribute(
       gl, shaderProgram
     );
-    var vertexColorAttribute = null; /*initVertexColorAttribute(
-      gl, shaderProgram
-    );*/
 
     var horizAspect = 480.0/640.0;
     var MIN_ZOOM = -3.3;
@@ -167,8 +115,8 @@
     });
 
     renderLoop(
-      gl, time, initialTriangles, horizAspect, verticesBuffer, colorBuffer,
-      shaderProgram, vertexPositionAttribute, vertexColorAttribute,
+      gl, time, initialTriangles, horizAspect, verticesBuffer,
+      shaderProgram, vertexPositionAttribute, 
       cameraPosition
     );
   };

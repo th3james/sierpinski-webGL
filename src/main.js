@@ -46,7 +46,7 @@
   };
 
   var setBufferData = function (gl, verticesBuffer, data) {
-    var vertices = Sierpinski.generateVertices(data, 8);
+    var vertices = Sierpinski.generateVertices(data, 11);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
     gl.bufferData(
@@ -153,8 +153,8 @@
     );*/
 
     var horizAspect = 480.0/640.0;
-    var MIN_ZOOM = -4.0;
-    var MAX_ZOOM = -0.1;
+    var MIN_ZOOM = -3.3;
+    var MAX_ZOOM = -0.2;
     var cameraPosition = [0.0, 0.0, MIN_ZOOM];
 
     canvasEvents.onDrag(function (x, y) {

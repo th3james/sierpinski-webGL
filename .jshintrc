@@ -9,7 +9,7 @@
     "Matrix": true,
     "$V": true,
     "$": true,
-    "canvasEventStream": true,
+    "CanvasEventStream": true,
     "makePerspective": true
   },
   "strict": true,

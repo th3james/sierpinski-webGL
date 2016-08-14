@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  window.canvasEventStream = function (theCanvas) {
+  window.CanvasEventStream = function (theCanvas) {
     var $canvas = theCanvas;
     var dragging = false;
     var dragStart = {x: 0, y:0};
@@ -27,10 +27,10 @@
             var deltaY = dragEv.screenY - dragStart.y;
             callback(
               deltaX*(1/width),
-              deltaX*(1/height)
+              deltaY*(1/height)
             );
           }
-        })
+        });
       }
     };
   };

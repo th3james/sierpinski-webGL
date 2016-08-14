@@ -152,7 +152,7 @@
 
     var gl = WebGLHelpers.initWebGL(canvas);
 
-    var canvasEvents = canvasEventStream($canvas);
+    var canvasEvents = CanvasEventStream($canvas);
     startRenderLoop(gl, canvasEvents);
   };
 

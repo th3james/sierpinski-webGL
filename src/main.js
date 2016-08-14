@@ -1,5 +1,5 @@
-'use strict';
 (function () {
+  'use strict';
   var initShaders = function (gl) {
     var fragmentShader = WebGLHelpers.getShader(gl, "shader-fs");
     var vertexShader = WebGLHelpers.getShader(gl, "shader-vs");

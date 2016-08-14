@@ -1,2 +1,2 @@
 all:
-	jslint src/*
+	jshint src/*

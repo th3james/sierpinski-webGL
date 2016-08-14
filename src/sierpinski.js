@@ -1,13 +1,14 @@
 (function () {
-  window.Sierpinski = {}
+  'use strict';
+  window.Sierpinski = {};
 
-  Sierpinski.midPoint = function(x1, y1, x2, y2) {
+  window.Sierpinski.midPoint = function(x1, y1, x2, y2) {
     var xMid = (x1 + x2)/2;
     var yMid = (y1 + y2)/2;
     return [xMid, yMid];
-  }
+  };
 
-  Sierpinski.generateVertices = function(startTriangle, levels) {
+  window.Sierpinski.generateVertices = function(startTriangle, levels) {
     var newTriangles = [];
 
     // for each vertex
@@ -22,7 +23,7 @@
         var mid = Sierpinski.midPoint(
           rootVertex[0], rootVertex[1], otherVertex[0], otherVertex[1]
         );
-        newTriangles.push(mid[0])
+        newTriangles.push(mid[0]);
         newTriangles.push(mid[1]);
       }
     }

@@ -1,0 +1,16 @@
+{
+  "indent": false,
+  "white": true,
+  "browser": true,
+  "globals": {
+    "alert": true,
+    "WebGLHelpers": true,
+    "Sierpinski": true,
+    "Matrix": true,
+    "$V": true,
+    "makePerspective": true
+  },
+  "strict": true,
+  "undef": "true",
+  "unused": true
+}

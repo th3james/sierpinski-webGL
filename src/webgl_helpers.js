@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
   window.WebGLHelpers = {};
 
   WebGLHelpers.initWebGL = function(canvas) {
@@ -25,13 +26,13 @@
 
 
   WebGLHelpers.getShader = function(gl, id, type) {
-    var shaderScript, theSource, currentChild, shader;
+    var shaderScript, theSource, shader;
 
     shaderScript = document.getElementById(id);
 
     if (!shaderScript) {
       alert("Failed to load shader");
-      throw "Failed to load shader"
+      throw "Failed to load shader";
     }
 
     theSource = shaderScript.text;

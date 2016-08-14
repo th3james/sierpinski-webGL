@@ -47,7 +47,7 @@
       -1.0, -1.0,
       1.0, -1.0,
     ];
-    var vertices = Sierpinski.generateVertices(startTriangle, 10);
+    var vertices = Sierpinski.generateVertices(startTriangle, 11);
 
     gl.bufferData(
       gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW
@@ -94,10 +94,20 @@
     gl.drawArrays(gl.TRIANGLES, 0, verticesBuffer.numItems);
   };
 
+  var TICK_WAIT = 16; // roughly 60FPS
+  var zoomingIn = true;
+  var zoomSpeed = 0.02;
   var updateWorld = function (time, cameraPosition) {
-    cameraPosition[2] += 0.02;
-    if (cameraPosition[2] >= -3) {
-      cameraPosition[2] = -8.0;
+    time += TICK_WAIT;
+    if (zoomingIn) {
+      cameraPosition[2] += zoomSpeed;
+    } else {
+      cameraPosition[2] -= zoomSpeed;
+    }
+    if (cameraPosition[2] >= -0.2) {
+      zoomingIn = false;
+    } else if (cameraPosition[2] <= -4.0) {
+      zoomingIn = true;
     }
     return cameraPosition;
   };
@@ -112,12 +122,11 @@
     );
 
     setTimeout(function() {
-      time += 16;
       renderLoop(
         gl, time, horizAspect, verticesBuffer, colorBuffer, shaderProgram,
         vertexPositionAttribute, vertexColorAttribute, cameraPosition
       );
-    }, 16); // roughly 60FPS
+    }, TICK_WAIT); 
   };
 
   var startRenderLoop = function(gl, canvasEvents) {

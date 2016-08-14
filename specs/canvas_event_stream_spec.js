@@ -34,4 +34,16 @@ describe("canvasEventStream", function () {
     var expectedX = (320 - 300)*(1/canvasWidth);
     expect(dragListener).toHaveBeenCalledWith(expectedX, 0);
   });
+
+  it("triggers appropriate drag events with scaled coordinates when dragged up", function() {
+    var $canvas = makeFakeCanvas();
+    var eventStream = CanvasEventStream($canvas);
+    var dragListener = jasmine.createSpy('spy');
+    eventStream.onDrag(dragListener);
+
+    triggerFakeMouseDown($canvas, {x: 320, y: 240});
+    triggerFakeMouseMove($canvas, {x: 320, y: 250});
+    var expectedY = (240 - 250)*(1/canvasHeight);
+    expect(dragListener).toHaveBeenCalledWith(0, expectedY);
+  });
 });

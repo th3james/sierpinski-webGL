@@ -33,17 +33,20 @@
   ) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    // set perspective and model view
     var mvMatrix = WebGLHelpers.calculateMvMatrix(
       WebGLHelpers.identity(), cameraPosition
     );
     WebGLHelpers.setMatrixUniforms(gl, perspective, mvMatrix, program);
     
+    // point vertex attribute to vertices buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
     gl.vertexAttribPointer(
       vertexPositionAttribute, verticesBuffer.itemSize,
       gl.FLOAT, false, 0, 0
     );
 
+    // draw triangles
     gl.drawArrays(gl.TRIANGLES, 0, verticesBuffer.numItems);
   };
 
@@ -74,12 +77,14 @@
       gl, shaderProgram
     );
 
+    // camera
     var perspective = makePerspective(45, height/width, 0.1, 100.0);
 
     var MIN_ZOOM = -3.25;
     var MAX_ZOOM = -0.2;
     var cameraPosition = [0.0, 0.0, MIN_ZOOM];
 
+    // User events
     canvasEvents.onDrag(function (x, y) {
       cameraPosition[0] += x;
       cameraPosition[1] += y;
@@ -89,6 +94,7 @@
       cameraPosition[2] = MIN_ZOOM + (MAX_ZOOM-MIN_ZOOM)*zoomPercent;
     });
 
+    // main loop
     renderLoop(
       gl, initialTriangles, perspective, verticesBuffer,
       shaderProgram, vertexPositionAttribute, cameraPosition

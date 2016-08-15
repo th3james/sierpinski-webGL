@@ -20,12 +20,12 @@
     // Clear the color as well as the depth buffer.
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.viewport(0, 0, canvas.width, canvas.height);
-    
+
     return gl;
   };
 
 
-  WebGLHelpers.getShader = function(gl, id, type) {
+  WebGLHelpers.getShader = function(gl, id) {
     var shaderScript, theSource, shader;
 
     shaderScript = document.getElementById(id);
@@ -37,14 +37,13 @@
 
     theSource = shaderScript.text;
 
-    if (!type) {
-      if (shaderScript.type == "x-shader/x-fragment") {
-        type = gl.FRAGMENT_SHADER;
-      } else if (shaderScript.type == "x-shader/x-vertex") {
-        type = gl.VERTEX_SHADER;
-      } else {
-        throw "Can't determine shader type";
-      }
+    var type = null;
+    if (shaderScript.type == "x-shader/x-fragment") {
+      type = gl.FRAGMENT_SHADER;
+    } else if (shaderScript.type == "x-shader/x-vertex") {
+      type = gl.VERTEX_SHADER;
+    } else {
+      throw "Can't determine shader type";
     }
 
     shader = gl.createShader(type);

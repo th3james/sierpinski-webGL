@@ -38,6 +38,7 @@
       WebGLHelpers.identity(), cameraPosition
     );
     WebGLHelpers.setMatrixUniforms(gl, perspective, mvMatrix, program);
+    inFrustrum(perspective.x(mvMatrix), [1, 0]);
     
     // point vertex attribute to vertices buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
@@ -49,6 +50,14 @@
     // draw triangles
     gl.drawArrays(gl.TRIANGLES, 0, verticesBuffer.numItems);
   };
+
+  window.inFrustrum = function (mvMatrix, vertex) {
+    var Pclip = mvMatrix.multiply(
+      $V([vertex[0], vertex[1], 0, 1])
+    ).elements;
+    return Math.abs(Pclip[0]) <= Pclip[3] && 
+           Math.abs(Pclip[1]) <= Pclip[3] ;
+  }
 
   var TICK_WAIT = 16; // roughly 60FPS
   var renderLoop = function (

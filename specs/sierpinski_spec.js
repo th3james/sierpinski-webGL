@@ -63,4 +63,21 @@ describe("Sierpinski", function() {
       );
     });
   });
+
+  describe(".filterTriangles", function () {
+    it("filters only triangles that return true in the given function", function () {
+      var triangleToKeep = [0, 1, 1, 0, 0, 0];
+      var triangleToFilter = [0, 0, 1, 1, 1, 0];
+      var triangles = triangleToKeep.concat(triangleToFilter);
+
+      var filterFn = function (iterTriangle) {
+        // compares 2 arrays' values (JS has no way to do this :-|)
+        return (iterTriangle.length==triangleToKeep.length &&
+          iterTriangle.every(function(v,i) { return v === triangleToKeep[i]})
+        )
+      };
+      var result = Sierpinski.filterTriangles(triangles, filterFn);
+      expect(result).toEqual(triangleToKeep);
+    });
+  });
 });

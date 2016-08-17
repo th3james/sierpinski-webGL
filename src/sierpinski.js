@@ -24,6 +24,17 @@
     }, []);
   };
 
+  window.Sierpinski.filterTriangles = function (vertices, filterFn) {
+    var keptVertices = [];
+    for(var i = 0; i < vertices.length/6; i +=6) {
+      var triangleVerts = vertices.slice(i, i+6);
+      if (filterFn(triangleVerts)) {
+        keptVertices = keptVertices.concat(triangleVerts);
+      }
+    }
+    return keptVertices;
+  };
+
   window.Sierpinski.generateVertices = function(startTriangle, levels) {
     var newTriangles = mapPairs(startTriangle, function(rootVertex) {
       // collect mid points between each vertex 

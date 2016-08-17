@@ -54,7 +54,7 @@
     gl, vertices, perspective, verticesBuffer, shaderProgram,
     vertexPositionAttribute, cameraPosition
   ) {
-    updateVertices(gl, vertices, verticesBuffer);
+    vertices = updateVertices(gl, vertices, verticesBuffer);
     drawScene(
       gl, shaderProgram, perspective, verticesBuffer, vertexPositionAttribute,
       cameraPosition
@@ -69,10 +69,21 @@
   };
 
   var updateVertices = function (gl, vertices, buffer) {
-    if (Math.random() < 0.01) {
-      var newTriangles = vertices.slice(0,6*90);
+    if (Math.random() < 0.005) {
+      var firstNinety = vertices.slice(0,6*90);
+      var newTriangles = [];
+      for(var i = 0; i < firstNinety.length/6; i +=6) {
+        var vertices = firstNinety.slice(i, i+6);
+
+        newTriangles = newTriangles.concat(
+          Sierpinski.generateVertices(vertices, 3)
+        );
+      }
 
       setBufferData(gl, buffer, newTriangles);
+      return newTriangles;
+    } else {
+      return vertices;
     }
   };
 

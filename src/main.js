@@ -16,9 +16,7 @@
     return verticesBuffer;
   };
 
-  var setBufferData = function (gl, verticesBuffer, data) {
-    var vertices = Sierpinski.generateVertices(data, 11);
-
+  var setBufferData = function (gl, verticesBuffer, vertices) {
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
     gl.bufferData(
       gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW
@@ -38,7 +36,7 @@
       WebGLHelpers.identity(), cameraPosition
     );
     WebGLHelpers.setMatrixUniforms(gl, perspective, mvMatrix, program);
-    inFrustrum(perspective.x(mvMatrix), [1, 0]);
+    //inFrustrum(perspective.x(mvMatrix), [1, 0]);
     
     // point vertex attribute to vertices buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
@@ -51,19 +49,12 @@
     gl.drawArrays(gl.TRIANGLES, 0, verticesBuffer.numItems);
   };
 
-  window.inFrustrum = function (mvMatrix, vertex) {
-    var Pclip = mvMatrix.multiply(
-      $V([vertex[0], vertex[1], 0, 1])
-    ).elements;
-    return Math.abs(Pclip[0]) <= Pclip[3] && 
-           Math.abs(Pclip[1]) <= Pclip[3] ;
-  }
-
   var TICK_WAIT = 16; // roughly 60FPS
   var renderLoop = function (
-    gl, triangles, perspective, verticesBuffer, shaderProgram,
+    gl, vertices, perspective, verticesBuffer, shaderProgram,
     vertexPositionAttribute, cameraPosition
   ) {
+    updateVertices(gl, vertices, verticesBuffer);
     drawScene(
       gl, shaderProgram, perspective, verticesBuffer, vertexPositionAttribute,
       cameraPosition
@@ -71,17 +62,26 @@
 
     setTimeout(function () {
       renderLoop(
-        gl, triangles, perspective, verticesBuffer, shaderProgram,
+        gl, vertices, perspective, verticesBuffer, shaderProgram,
         vertexPositionAttribute, cameraPosition
       );
     }, TICK_WAIT); 
+  };
+
+  var updateVertices = function (gl, vertices, buffer) {
+    if (Math.random() < 0.01) {
+      var newTriangles = vertices.slice(0,6*90);
+
+      setBufferData(gl, buffer, newTriangles);
+    }
   };
 
   var startRenderLoop = function(
     gl, shaderProgram, width, height, canvasEvents, sliderEvents,
     initialTriangles
   ) {
-    var verticesBuffer = initBuffers(gl, initialTriangles);
+    var vertices = Sierpinski.generateVertices(initialTriangles, 7);
+    var verticesBuffer = initBuffers(gl, vertices);
     var vertexPositionAttribute = initVertexPositionAttribute(
       gl, shaderProgram
     );
@@ -105,7 +105,7 @@
 
     // main loop
     renderLoop(
-      gl, initialTriangles, perspective, verticesBuffer,
+      gl, vertices, perspective, verticesBuffer,
       shaderProgram, vertexPositionAttribute, cameraPosition
     );
   };
@@ -129,6 +129,7 @@
       -1.0, -1.0,
       1.0, -1.0,
     ];
+
     startRenderLoop(
       gl, shaderProgram, canvas.width, canvas.height,
       canvasEvents, sliderEvents, startTriangle

@@ -118,5 +118,5 @@
     ).elements;
     return Math.abs(vClip[0]) <= vClip[3] &&
            Math.abs(vClip[1]) <= vClip[3];
-  }
+  };
 })();

@@ -26,17 +26,11 @@
   };
 
   var drawScene = function (
-    gl, program, perspective, verticesBuffer, vertexPositionAttribute,
-    cameraPosition
+    gl, program, perspective, mvMatrix, verticesBuffer, vertexPositionAttribute
   ) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // set perspective and model view
-    var mvMatrix = WebGLHelpers.calculateMvMatrix(
-      WebGLHelpers.identity(), cameraPosition
-    );
     WebGLHelpers.setMatrixUniforms(gl, perspective, mvMatrix, program);
-    //inFrustrum(perspective.x(mvMatrix), [1, 0]);
     
     // point vertex attribute to vertices buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
@@ -54,10 +48,16 @@
     gl, vertices, perspective, verticesBuffer, shaderProgram,
     vertexPositionAttribute, cameraPosition
   ) {
-    vertices = updateVertices(gl, vertices, verticesBuffer);
+    var mvMatrix = WebGLHelpers.calculateMvMatrix(
+      WebGLHelpers.identity(), cameraPosition
+    );
+
+    vertices = updateVertices(
+      gl, vertices, verticesBuffer, perspective.x(mvMatrix)
+    );
     drawScene(
-      gl, shaderProgram, perspective, verticesBuffer, vertexPositionAttribute,
-      cameraPosition
+      gl, shaderProgram, perspective, mvMatrix, verticesBuffer,
+      vertexPositionAttribute
     );
 
     setTimeout(function () {
@@ -68,20 +68,34 @@
     }, TICK_WAIT); 
   };
 
-  var updateVertices = function (gl, vertices, buffer) {
-    if (Math.random() < 0.005) {
-      var firstNinety = vertices.slice(0,6*90);
+  var MIN_VERTS = 5000;
+  var updateVertices = function (gl, vertices, buffer, mvpMatrix) {
+    if (Math.random() < 0.01) {
+      var filteredTriangles = Sierpinski.filterTriangles(
+        vertices, function (triangle) {
+          for(var i=0; i < triangle.length; i += 2) {
+            if (WebGLHelpers.inFrustrum(mvpMatrix, triangle.slice(i, i+2))) {
+              return true;
+            }
+          }
+          return false;
+        }
+      );
       var newTriangles = [];
-      for(var i = 0; i < firstNinety.length/6; i +=6) {
-        var vertices = firstNinety.slice(i, i+6);
+      if (filteredTriangles.length < MIN_VERTS) {
+        for(var i = 0; i < filteredTriangles.length; i +=6) {
+          var triangle = filteredTriangles.slice(i, i+6);
 
-        newTriangles = newTriangles.concat(
-          Sierpinski.generateVertices(vertices, 3)
-        );
+          newTriangles = newTriangles.concat(
+            Sierpinski.generateVertices(triangle, 2)
+          );
+        }
+
+        setBufferData(gl, buffer, newTriangles);
+        return newTriangles;
+      } else {
+        return vertices;
       }
-
-      setBufferData(gl, buffer, newTriangles);
-      return newTriangles;
     } else {
       return vertices;
     }

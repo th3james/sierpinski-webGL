@@ -52,9 +52,14 @@
       WebGLHelpers.identity(), cameraPosition
     );
 
-    vertices = updateVertices(
-      gl, vertices, verticesBuffer, perspective.x(mvMatrix)
+    var updateResult = Sierpinski.generateForWindow(
+      vertices, perspective.x(mvMatrix), 5000
     );
+    // new vertices generated
+    if (updateResult[0]) {
+      vertices = updateResult[1];
+      setBufferData(gl, verticesBuffer, vertices);
+    }
     drawScene(
       gl, shaderProgram, perspective, mvMatrix, verticesBuffer,
       vertexPositionAttribute

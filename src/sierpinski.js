@@ -24,6 +24,16 @@
     }, []);
   };
 
+  var mapTriangles = function (triangleVerts, fn) {
+    var result = [];
+    for(var i = 0; i < triangleVerts.length; i += 6) {
+      result.push(
+        fn(triangleVerts.slice(i, i+6), i)
+      );
+    }
+    return result;
+  }
+
   window.Sierpinski.filterTriangles = function (vertices, filterFn) {
     var keptVertices = [];
     for(var i = 0; i < vertices.length; i +=6) {
@@ -51,5 +61,40 @@
       });
     }
     return flatten(newTriangles);
+  };
+
+  // Generate > minCount sierpinksi vertices inside the given viewport,
+  // inside the given vertices
+  // 
+  // returns tuple array containing
+  // [bool generatedNewVerts?, arr newVerts (if first arg true)]
+  window.Sierpinski.generateForWindow = function (vertices, mvpMatrix, minCount) {
+    var filteredVertices = Sierpinski.filterTriangles(
+      vertices, function (triangle) {
+        for(var i=0; i < triangle.length; i += 2) {
+          if (WebGLHelpers.inFrustrum(mvpMatrix, triangle.slice(i, i+2))) {
+            return true;
+          }
+        }
+        return false;
+      }
+    );
+
+    if (filteredVertices.length < vertices.length) {
+      if (filteredVertices.length < minCount) {
+        return [
+          true,
+          flatten(mapTriangles(
+            filteredVertices, function (triangle) {
+              return window.Sierpinski.generateVertices(triangle, 1);
+            }
+          ))
+        ];
+      } else {
+        return [true, filteredVertices];
+      }
+    } else {
+      return [false];
+    }
   };
 })();

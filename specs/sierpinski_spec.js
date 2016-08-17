@@ -80,4 +80,89 @@ describe("Sierpinski", function() {
       expect(result).toEqual(triangleToKeep);
     });
   });
+
+  describe(".generateForWindow", function () {
+    // Window load matrix
+    var mvpMatrix = $M([
+      [3.2189514164974597, 0, 0, 0],
+      [0, 2.414213562373095, 0, 0],
+      [0, 0, -1.002002002002002, 3.0563063063063063],
+      [0, 0, -1, 3.25]
+    ]);
+    describe("when filtering doesn't remove any vertices", function () {
+      it("returns false", function () {
+        var vertCount = 3;
+        var vertices = [
+          0.0, 1.0,
+          -1.0, -1.0,
+          1.0, -1.0,
+        ];
+        var result = Sierpinski.generateForWindow(
+          vertices, mvpMatrix, vertCount
+        );
+        expect(result[0]).toEqual(false);
+      });
+    });
+
+    describe("when filtering removes some vertices", function () {
+      var originalVertices;
+      beforeEach(function () {
+        originalVertices = [
+          0.0, 1.0,
+          -1.0, -1.0,
+          1.0, -1.0,
+          10.0, 10.0,
+          9.0, 9.0,
+          10.0, 9.0,
+        ];
+      });
+      describe("and there are still more vertices than minCount", function() {
+        var result;
+        beforeEach(function () {
+          result = Sierpinski.generateForWindow(
+            originalVertices, mvpMatrix, 3
+          );
+        })
+
+        it("returns true as the first result", function () {
+          expect(result[0]).toEqual(true);
+        });
+
+        it("returns the filtered vertices as the second result", function () {
+          expectedFilteredVerts = [
+            0.0, 1.0,
+            -1.0, -1.0,
+            1.0, -1.0,
+          ];
+          expect(result[1]).toEqual(expectedFilteredVerts);
+        });
+      });
+
+      describe("and there are fewer vertices than minCount", function() {
+        var result;
+        beforeEach(function () {
+          result = Sierpinski.generateForWindow(
+            originalVertices, mvpMatrix, 7
+          );
+        })
+
+        it("returns true as the first result", function () {
+          expect(result[0]).toEqual(true);
+        });
+
+        it("returns generated sierpinski triangles of the filtered set", function () {
+          expectedFilteredVerts = [
+            0.0, 1.0,
+            -1.0, -1.0,
+            1.0, -1.0,
+          ];
+          expectedGeneratedVerts = Sierpinski.generateVertices(
+            expectedFilteredVerts, 1
+          );
+          expect(result[1]).toEqual(expectedGeneratedVerts);
+        });
+      });
+    });
+
+  });
 });

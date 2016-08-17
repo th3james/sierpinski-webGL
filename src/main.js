@@ -73,44 +73,11 @@
     }, TICK_WAIT); 
   };
 
-  var MIN_VERTS = 5000;
-  var updateVertices = function (gl, vertices, buffer, mvpMatrix) {
-    if (Math.random() < 0.01) {
-      var filteredTriangles = Sierpinski.filterTriangles(
-        vertices, function (triangle) {
-          for(var i=0; i < triangle.length; i += 2) {
-            if (WebGLHelpers.inFrustrum(mvpMatrix, triangle.slice(i, i+2))) {
-              return true;
-            }
-          }
-          return false;
-        }
-      );
-      var newTriangles = [];
-      if (filteredTriangles.length < MIN_VERTS) {
-        for(var i = 0; i < filteredTriangles.length; i +=6) {
-          var triangle = filteredTriangles.slice(i, i+6);
-
-          newTriangles = newTriangles.concat(
-            Sierpinski.generateVertices(triangle, 2)
-          );
-        }
-
-        setBufferData(gl, buffer, newTriangles);
-        return newTriangles;
-      } else {
-        return vertices;
-      }
-    } else {
-      return vertices;
-    }
-  };
-
   var startRenderLoop = function(
     gl, shaderProgram, width, height, canvasEvents, sliderEvents,
     initialTriangles
   ) {
-    var vertices = Sierpinski.generateVertices(initialTriangles, 7);
+    var vertices = Sierpinski.generateVertices(initialTriangles, 3);
     var verticesBuffer = initBuffers(gl, vertices);
     var vertexPositionAttribute = initVertexPositionAttribute(
       gl, shaderProgram

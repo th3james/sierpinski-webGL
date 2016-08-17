@@ -71,29 +71,28 @@
   window.Sierpinski.generateForWindow = function (vertices, mvpMatrix, minCount) {
     var filteredVertices = Sierpinski.filterTriangles(
       vertices, function (triangle) {
-        for(var i=0; i < triangle.length; i += 2) {
-          if (WebGLHelpers.inFrustrum(mvpMatrix, triangle.slice(i, i+2))) {
-            return true;
-          }
-        }
-        return false;
+        return WebGLHelpers.triangleInFrustum(mvpMatrix, triangle)
       }
     );
 
-    if (filteredVertices.length < minCount ||
+    // element is inside
+    if (filteredVertices.length === 0) {
+      return [true, []]
+    } else if (filteredVertices.length < minCount ||
         filteredVertices.length < vertices.length) {
       if (filteredVertices.length < minCount) {
-        return [
-          true,
-          flatten(mapTriangles(
-            filteredVertices, function (triangle) {
-              return window.Sierpinski.generateVertices(triangle, 1);
-            }
-          ))
-        ];
-      } else {
-        return [true, filteredVertices];
+        filteredVertices = flatten(mapTriangles(
+          filteredVertices, function (triangle) {
+            return Sierpinski.generateVertices(triangle, 1);
+          }
+        ));
+        if (filteredVertices.length < minCount) {
+          filteredVertices = Sierpinski.generateForWindow(
+            filteredVertices, mvpMatrix, minCount
+          )[1];
+        }
       }
+      return [true, filteredVertices];
     } else {
       return [false];
     }

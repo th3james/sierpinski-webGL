@@ -53,7 +53,11 @@
     );
 
     var updateResult = Sierpinski.generateForWindow(
-      vertices, perspective.x(mvMatrix), 5000
+      [
+        0.0, 1.0,
+        -1.0, -1.0,
+        1.0, -1.0,
+      ], perspective.x(mvMatrix), 5000
     );
     // new vertices generated
     if (updateResult[0]) {
@@ -84,10 +88,10 @@
     );
 
     // camera
-    var perspective = makePerspective(45, height/width, 0.1, 100.0);
+    var perspective = makePerspective(45, height/width, 0.01, 100.0);
 
     var MIN_ZOOM = -3.25;
-    var MAX_ZOOM = -0.2;
+    var MAX_ZOOM = -0.02;
     var cameraPosition = [0.0, 0.0, MIN_ZOOM];
 
     // User events

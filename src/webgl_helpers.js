@@ -112,11 +112,20 @@
     );
   };
 
-  WebGLHelpers.inFrustrum = function (mvpMatrix, vertex) {
+  WebGLHelpers.inFrustum = function (mvpMatrix, vertex) {
     var vClip = mvpMatrix.multiply(
       $V([vertex[0], vertex[1], 0, 1])
     ).elements;
     return Math.abs(vClip[0]) <= vClip[3] &&
            Math.abs(vClip[1]) <= vClip[3];
+  };
+
+  WebGLHelpers.triangleInFrustum = function (mvpMatrix, triangle) {
+    for(var i=0; i < triangle.length; i += 2) {
+      if (WebGLHelpers.inFrustum(mvpMatrix, triangle.slice(i, i+2))) {
+        return true;
+      }
+    }
+    return false;
   };
 })();

@@ -72,6 +72,21 @@ describe("Sierpinski", function() {
       [0, 0, -1.002002002002002, 3.0563063063063063],
       [0, 0, -1, 3.25]
     ]);
+
+    describe("when filtering removes all vertices", function () {
+      it("returns empty array", function () {
+        var outsideVertices = [
+          10.0, 10.0,
+          9.0, 9.0,
+          10.0, 9.0,
+        ];
+        var result = Sierpinski.generateForWindow(
+          outsideVertices, mvpMatrix, 3
+        );
+        expect(result).toEqual([]);
+      });
+    });
+
     describe("when filtering doesn't remove any vertices and is longer the minCount", function () {
       it("returns the same object", function () {
         var vertices = [
@@ -137,6 +152,5 @@ describe("Sierpinski", function() {
         });
       });
     });
-
   });
 });

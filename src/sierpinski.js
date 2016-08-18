@@ -41,7 +41,9 @@
       }
     );
 
-    if (filteredVertices.length < minCount) {
+    if (filteredVertices.length === 0 ) {
+      return [];
+    } else if (filteredVertices.length < minCount) {
       filteredVertices = flatten(Triangle.map(
         filteredVertices, function (triangle) {
           return Sierpinski.generateVertices(triangle, 1);

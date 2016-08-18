@@ -139,11 +139,11 @@
         if (max[j] === null || vClip[j] > max[j]) {
           max[j] = vClip[j];
         }
-      };
+      }
     }
 
     var zoomExtent = mvpMatrix.elements[3][3];
-    // Check if any dimensions is totally outside frustum
+    // Check if any dimension is totally outside frustum
     for(i=0; i < 2; i++) {
       if (min[i] >  zoomExtent ||
           max[i] < -zoomExtent) {

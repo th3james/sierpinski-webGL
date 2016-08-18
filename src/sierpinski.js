@@ -32,7 +32,7 @@
       );
     }
     return result;
-  }
+  };
 
   Sierpinski.filterTriangles = function (vertices, filterFn) {
     var keptVertices = [];
@@ -71,7 +71,7 @@
   Sierpinski.generateForWindow = function (vertices, mvpMatrix, minCount) {
     var filteredVertices = Sierpinski.filterTriangles(
       vertices, function (triangle) {
-        return WebGLHelpers.triangleInFrustum(mvpMatrix, triangle)
+        return WebGLHelpers.triangleInFrustum(mvpMatrix, triangle);
       }
     );
 

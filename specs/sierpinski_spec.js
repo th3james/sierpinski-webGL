@@ -89,18 +89,17 @@ describe("Sierpinski", function() {
       [0, 0, -1.002002002002002, 3.0563063063063063],
       [0, 0, -1, 3.25]
     ]);
-    describe("when filtering doesn't remove any vertices", function () {
-      it("returns false", function () {
-        var vertCount = 3;
+    describe("when filtering doesn't remove any vertices and is longer the minCount", function () {
+      it("returns the same object", function () {
         var vertices = [
           0.0, 1.0,
           -1.0, -1.0,
           1.0, -1.0,
         ];
         var result = Sierpinski.generateForWindow(
-          vertices, mvpMatrix, vertCount
+          vertices, mvpMatrix, 3
         );
-        expect(result[0]).toEqual(false);
+        expect(result).toEqual(vertices);
       });
     });
 
@@ -124,17 +123,13 @@ describe("Sierpinski", function() {
           );
         })
 
-        it("returns true as the first result", function () {
-          expect(result[0]).toEqual(true);
-        });
-
-        it("returns the filtered vertices as the second result", function () {
+        it("returns the filtered vertices", function () {
           expectedFilteredVerts = [
             0.0, 1.0,
             -1.0, -1.0,
             1.0, -1.0,
           ];
-          expect(result[1]).toEqual(expectedFilteredVerts);
+          expect(result).toEqual(expectedFilteredVerts);
         });
       });
 
@@ -146,10 +141,6 @@ describe("Sierpinski", function() {
           );
         })
 
-        it("returns true as the first result", function () {
-          expect(result[0]).toEqual(true);
-        });
-
         it("returns generated sierpinski triangles of the filtered set", function () {
           expectedFilteredVerts = [
             0.0, 1.0,
@@ -159,7 +150,7 @@ describe("Sierpinski", function() {
           expectedGeneratedVerts = Sierpinski.generateVertices(
             expectedFilteredVerts, 1
           );
-          expect(result[1]).toEqual(expectedGeneratedVerts);
+          expect(result).toEqual(expectedGeneratedVerts);
         });
       });
     });

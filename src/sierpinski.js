@@ -63,11 +63,8 @@
     return flatten(newTriangles);
   };
 
-  // Generate > minCount sierpinksi vertices inside the given viewport,
+  // Generate > minCount sierpinksi vertices inside the given viewport and
   // inside the given vertices
-  // 
-  // returns tuple array containing
-  // [bool generatedNewVerts?, arr newVerts (if first arg true)]
   Sierpinski.generateForWindow = function (vertices, mvpMatrix, minCount) {
     var filteredVertices = Sierpinski.filterTriangles(
       vertices, function (triangle) {
@@ -75,24 +72,19 @@
       }
     );
 
-    if (filteredVertices.length < minCount ||
-        filteredVertices.length < vertices.length) {
-      if (filteredVertices.length < minCount) {
-        filteredVertices = flatten(mapTriangles(
-          filteredVertices, function (triangle) {
-            return Sierpinski.generateVertices(triangle, 1);
-          }
-        ));
-        if (filteredVertices.length < minCount) {
-          // still not enough vertices? recurse
-          filteredVertices = Sierpinski.generateForWindow(
-            filteredVertices, mvpMatrix, minCount
-          )[1];
+    if (filteredVertices.length < minCount) {
+      filteredVertices = flatten(mapTriangles(
+        filteredVertices, function (triangle) {
+          return Sierpinski.generateVertices(triangle, 1);
         }
+      ));
+      if (filteredVertices.length < minCount) {
+        // still not enough vertices? recurse
+        filteredVertices = Sierpinski.generateForWindow(
+          filteredVertices, mvpMatrix, minCount
+        );
       }
-      return [true, filteredVertices];
-    } else {
-      return [false];
     }
+    return filteredVertices;
   };
 })();

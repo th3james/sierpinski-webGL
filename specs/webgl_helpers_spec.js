@@ -31,7 +31,7 @@ describe("WebGLHelpers", function () {
     })
   });
 
-  describe(".triangleOverlapsFrustum", function () {
+  describe(".triangleInFrustum", function () {
     describe("given a triangle that is inside the frustum", function () {
       it("returns true", function () {
         // Taken from window at load

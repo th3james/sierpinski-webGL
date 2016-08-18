@@ -62,10 +62,9 @@
       START_TRIANGLE, perspective.x(mvMatrix), MIN_VERTICES
     );
     // new vertices generated
-    if (updateResult[0]) {
-      vertices = updateResult[1];
-      setBufferData(gl, verticesBuffer, vertices);
-    }
+    vertices = updateResult;
+    setBufferData(gl, verticesBuffer, vertices);
+
     drawScene(
       gl, shaderProgram, perspective, mvMatrix, verticesBuffer,
       vertexPositionAttribute
@@ -91,7 +90,6 @@
 
     // camera
     var perspective = makePerspective(45, height/width, 0.001, 4.0);
-
     var MIN_ZOOM = -3.25;
     var MAX_ZOOM = -0.01;
     var cameraPosition = [0.0, 0.0, MIN_ZOOM];

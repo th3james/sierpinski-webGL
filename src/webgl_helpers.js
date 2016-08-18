@@ -131,18 +131,16 @@
       var vClip = mvpMatrix.multiply(
         $V([vertex[0], vertex[1], 0, 1])
       ).elements;
-      if (min[0] === null || vClip[0] < min[0]) {
-        min[0] = vClip[0];
-      }
-      if (max[0] === null || vClip[0] > max[0]) {
-        max[0] = vClip[0];
-      }
-      if (min[1] === null || vClip[1] < min[1]) {
-        min[1] = vClip[1];
-      }
-      if (max[1] === null || vClip[1] > max[1]) {
-        max[1] = vClip[1];
-      }
+
+      // find minimum for x, y
+      for(var j=0; j < 2; j++) {
+        if (min[j] === null || vClip[j] < min[j]) {
+          min[j] = vClip[j];
+        }
+        if (max[j] === null || vClip[j] > max[j]) {
+          max[j] = vClip[j];
+        }
+      };
     }
     // x is totally outside box
     if (min[0] > zoomExtent[3] ||

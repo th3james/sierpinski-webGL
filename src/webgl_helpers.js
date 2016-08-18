@@ -121,11 +121,39 @@
   };
 
   WebGLHelpers.triangleInFrustum = function (mvpMatrix, triangle) {
+    var min = [null,null]
+    var max = [null,null]
+    var zoomExtent = mvpMatrix.multiply(
+      $V([1, 1, 0, 1])
+    ).elements
     for(var i=0; i < triangle.length; i += 2) {
-      if (WebGLHelpers.inFrustum(mvpMatrix, triangle.slice(i, i+2))) {
-        return true;
+      var vertex = triangle.slice(i, i+2);
+      var vClip = mvpMatrix.multiply(
+        $V([vertex[0], vertex[1], 0, 1])
+      ).elements;
+      if (min[0] === null || vClip[0] < min[0]) {
+        min[0] = vClip[0];
+      }
+      if (max[0] === null || vClip[0] > max[0]) {
+        max[0] = vClip[0];
+      }
+      if (min[1] === null || vClip[1] < min[1]) {
+        min[1] = vClip[1];
+      }
+      if (max[1] === null || vClip[1] > max[1]) {
+        max[1] = vClip[1];
       }
     }
-    return false;
+    // x is totally outside box
+    if (min[0] > zoomExtent[3] ||
+        max[0] < -zoomExtent[3]) {
+      return false;
+    // y is totally outside box
+    } else if (min[1] > zoomExtent[3] ||
+               max[1] < -zoomExtent[3]) {
+      return false;
+    }
+    
+    return true;
   };
 })();

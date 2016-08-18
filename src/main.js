@@ -98,8 +98,8 @@
 
     // User events
     canvasEvents.onDrag(function (x, y) {
-      cameraPosition[0] += x;
-      cameraPosition[1] += y;
+      cameraPosition[0] += x * Math.abs(cameraPosition[2]);
+      cameraPosition[1] += y * Math.abs(cameraPosition[2]);
     });
 
     sliderEvents.onChange(function (zoomPercent) {

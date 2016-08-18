@@ -8,16 +8,6 @@
     return [xMid, yMid];
   };
 
-  var mapPairs = function (arr, fn) {
-    var result = [];
-    for(var i = 0; i < arr.length; i += 2) {
-      result.push(
-        fn(arr.slice(i, i+2), i)
-      );
-    }
-    return result;
-  };
-
   var flatten = function (arr) {
     return arr.reduce(function(flattened, subArr) {
       return flattened.concat(subArr);
@@ -25,9 +15,9 @@
   };
 
   Sierpinski.generateVertices = function(startTriangle, levels) {
-    var newTriangles = mapPairs(startTriangle, function(rootVertex) {
+    var newTriangles = Vertex.map(startTriangle, function(rootVertex) {
       // collect mid points between each vertex 
-      var midPoints = mapPairs(startTriangle, function(otherVertex) {
+      var midPoints = Vertex.map(startTriangle, function(otherVertex) {
         return Sierpinski.midPoint(rootVertex, otherVertex);
       });
 

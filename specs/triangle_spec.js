@@ -12,7 +12,7 @@ describe("Triangle", function () {
       expect(result[0]).toEqual(triangles.slice(0,6));
       expect(result[1]).toEqual(triangles.slice(6,12));
     });
-  })
+  });
 
   describe(".map", function () {
     it("returns the result of calling the function for each triangle", function () {

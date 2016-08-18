@@ -125,26 +125,25 @@
     var min = [null,null],
         max = [null,null];
 
-    for(var i=0; i < triangle.length; i += 2) {
-      var vertex = triangle.slice(i, i+2);
+    Vertex.each(triangle, function(vertex) {
       var vClip = mvpMatrix.multiply(
         $V([vertex[0], vertex[1], 0, 1])
       ).elements;
 
       // find minimum for x, y
-      for(var j=0; j < 2; j++) {
-        if (min[j] === null || vClip[j] < min[j]) {
-          min[j] = vClip[j];
+      for(var i=0; i < 2; i++) {
+        if (min[i] === null || vClip[i] < min[i]) {
+          min[i] = vClip[i];
         }
-        if (max[j] === null || vClip[j] > max[j]) {
-          max[j] = vClip[j];
+        if (max[i] === null || vClip[i] > max[i]) {
+          max[i] = vClip[i];
         }
       }
-    }
+    });
 
     var zoomExtent = mvpMatrix.elements[3][3];
     // Check if any dimension is totally outside frustum
-    for(i=0; i < 2; i++) {
+    for(var i=0; i < 2; i++) {
       if (min[i] >  zoomExtent ||
           max[i] < -zoomExtent) {
         return false;

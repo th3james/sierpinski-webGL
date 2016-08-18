@@ -44,6 +44,12 @@
   };
 
   var TICK_WAIT = 16; // roughly 60FPS
+  var START_TRIANGLE = [
+    0.0, 1.0,
+    -1.0, -1.0,
+    1.0, -1.0,
+  ];
+  var MIN_VERTICES = 5000;
   var renderLoop = function (
     gl, vertices, perspective, verticesBuffer, shaderProgram,
     vertexPositionAttribute, cameraPosition
@@ -53,11 +59,7 @@
     );
 
     var updateResult = Sierpinski.generateForWindow(
-      [
-        0.0, 1.0,
-        -1.0, -1.0,
-        1.0, -1.0,
-      ], perspective.x(mvMatrix), 5000
+      START_TRIANGLE, perspective.x(mvMatrix), MIN_VERTICES
     );
     // new vertices generated
     if (updateResult[0]) {
@@ -88,10 +90,10 @@
     );
 
     // camera
-    var perspective = makePerspective(45, height/width, 0.01, 100.0);
+    var perspective = makePerspective(45, height/width, 0.001, 4.0);
 
     var MIN_ZOOM = -3.25;
-    var MAX_ZOOM = -0.02;
+    var MAX_ZOOM = -0.01;
     var cameraPosition = [0.0, 0.0, MIN_ZOOM];
 
     // User events
@@ -125,15 +127,9 @@
       gl, "shader-fs", "shader-vs"
     );
 
-    var startTriangle = [
-      0.0, 1.0,
-      -1.0, -1.0,
-      1.0, -1.0,
-    ];
-
     startRenderLoop(
       gl, shaderProgram, canvas.width, canvas.height,
-      canvasEvents, sliderEvents, startTriangle
+      canvasEvents, sliderEvents, START_TRIANGLE
     );
   };
 

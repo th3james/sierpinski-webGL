@@ -75,7 +75,6 @@
       }
     );
 
-    // element is inside
     if (filteredVertices.length < minCount ||
         filteredVertices.length < vertices.length) {
       if (filteredVertices.length < minCount) {

@@ -120,12 +120,11 @@
            Math.abs(vClip[1]) <= vClip[3];
   };
 
+
   WebGLHelpers.triangleInFrustum = function (mvpMatrix, triangle) {
-    var min = [null,null]
-    var max = [null,null]
-    var zoomExtent = mvpMatrix.multiply(
-      $V([1, 1, 0, 1])
-    ).elements
+    var min = [null,null],
+        max = [null,null];
+
     for(var i=0; i < triangle.length; i += 2) {
       var vertex = triangle.slice(i, i+2);
       var vClip = mvpMatrix.multiply(
@@ -142,16 +141,15 @@
         }
       };
     }
-    // x is totally outside box
-    if (min[0] > zoomExtent[3] ||
-        max[0] < -zoomExtent[3]) {
-      return false;
-    // y is totally outside box
-    } else if (min[1] > zoomExtent[3] ||
-               max[1] < -zoomExtent[3]) {
-      return false;
+
+    var zoomExtent = mvpMatrix.elements[3][3];
+    // Check if any dimensions is totally outside frustum
+    for(i=0; i < 2; i++) {
+      if (min[i] >  zoomExtent ||
+          max[i] < -zoomExtent) {
+        return false;
+      }
     }
-    
     return true;
   };
 })();

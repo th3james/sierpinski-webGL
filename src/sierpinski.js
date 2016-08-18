@@ -2,7 +2,7 @@
   'use strict';
   window.Sierpinski = {};
 
-  window.Sierpinski.midPoint = function(vert1, vert2) {
+  Sierpinski.midPoint = function(vert1, vert2) {
     var xMid = (vert1[0] + vert2[0])/2;
     var yMid = (vert1[1] + vert2[1])/2;
     return [xMid, yMid];
@@ -34,7 +34,7 @@
     return result;
   }
 
-  window.Sierpinski.filterTriangles = function (vertices, filterFn) {
+  Sierpinski.filterTriangles = function (vertices, filterFn) {
     var keptVertices = [];
     for(var i = 0; i < vertices.length; i +=6) {
       var triangleVerts = vertices.slice(i, i+6);
@@ -45,7 +45,7 @@
     return keptVertices;
   };
 
-  window.Sierpinski.generateVertices = function(startTriangle, levels) {
+  Sierpinski.generateVertices = function(startTriangle, levels) {
     var newTriangles = mapPairs(startTriangle, function(rootVertex) {
       // collect mid points between each vertex 
       var midPoints = mapPairs(startTriangle, function(otherVertex) {
@@ -68,7 +68,7 @@
   // 
   // returns tuple array containing
   // [bool generatedNewVerts?, arr newVerts (if first arg true)]
-  window.Sierpinski.generateForWindow = function (vertices, mvpMatrix, minCount) {
+  Sierpinski.generateForWindow = function (vertices, mvpMatrix, minCount) {
     var filteredVertices = Sierpinski.filterTriangles(
       vertices, function (triangle) {
         return WebGLHelpers.triangleInFrustum(mvpMatrix, triangle)
@@ -76,9 +76,7 @@
     );
 
     // element is inside
-    if (filteredVertices.length === 0) {
-      return [true, []]
-    } else if (filteredVertices.length < minCount ||
+    if (filteredVertices.length < minCount ||
         filteredVertices.length < vertices.length) {
       if (filteredVertices.length < minCount) {
         filteredVertices = flatten(mapTriangles(
@@ -87,6 +85,7 @@
           }
         ));
         if (filteredVertices.length < minCount) {
+          // still not enough vertices? recurse
           filteredVertices = Sierpinski.generateForWindow(
             filteredVertices, mvpMatrix, minCount
           )[1];

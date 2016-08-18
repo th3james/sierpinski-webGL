@@ -24,27 +24,6 @@
     }, []);
   };
 
-  var mapTriangles = function (triangleVerts, fn) {
-    var result = [];
-    for(var i = 0; i < triangleVerts.length; i += 6) {
-      result.push(
-        fn(triangleVerts.slice(i, i+6), i)
-      );
-    }
-    return result;
-  };
-
-  Sierpinski.filterTriangles = function (vertices, filterFn) {
-    var keptVertices = [];
-    for(var i = 0; i < vertices.length; i +=6) {
-      var triangleVerts = vertices.slice(i, i+6);
-      if (filterFn(triangleVerts)) {
-        keptVertices = keptVertices.concat(triangleVerts);
-      }
-    }
-    return keptVertices;
-  };
-
   Sierpinski.generateVertices = function(startTriangle, levels) {
     var newTriangles = mapPairs(startTriangle, function(rootVertex) {
       // collect mid points between each vertex 
@@ -66,14 +45,14 @@
   // Generate > minCount sierpinksi vertices inside the given viewport and
   // inside the given vertices
   Sierpinski.generateForWindow = function (vertices, mvpMatrix, minCount) {
-    var filteredVertices = Sierpinski.filterTriangles(
+    var filteredVertices = Triangle.filter(
       vertices, function (triangle) {
         return WebGLHelpers.triangleInFrustum(mvpMatrix, triangle);
       }
     );
 
     if (filteredVertices.length < minCount) {
-      filteredVertices = flatten(mapTriangles(
+      filteredVertices = flatten(Triangle.map(
         filteredVertices, function (triangle) {
           return Sierpinski.generateVertices(triangle, 1);
         }

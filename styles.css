@@ -25,6 +25,10 @@ h3 {
   margin: 0 0 15px;
 }
 
+canvas {
+  cursor: move;
+}
+
 .controls {
   padding: 5px 0;
   overflow: hidden;
@@ -36,6 +40,7 @@ h3 {
 
 #zoom-slider {
   margin-left: 10px;
-  width: 200px;
+  width: 285px;
   float: right;
+  cursor: ew-resize;
 }

@@ -58,11 +58,9 @@
       WebGLHelpers.identity(), cameraPosition
     );
 
-    var updateResult = Sierpinski.generateForWindow(
+    var vertices = Sierpinski.generateForWindow(
       START_TRIANGLE, perspective.x(mvMatrix), MIN_VERTICES
     );
-    // new vertices generated
-    vertices = updateResult;
     setBufferData(gl, verticesBuffer, vertices);
 
     drawScene(

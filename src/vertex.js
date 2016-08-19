@@ -4,7 +4,7 @@
 
   Vertex.each = function (triangleVerts, fn) {
     for(var i = 0; i < triangleVerts.length; i += 2) {
-      fn(triangleVerts.slice(i, i+2), i)
+      fn(triangleVerts.slice(i, i+2), i);
     }
   };
 

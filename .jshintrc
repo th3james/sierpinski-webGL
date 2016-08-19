@@ -11,6 +11,8 @@
     "$": true,
     "CanvasEventStream": true,
     "SliderEventStream": true,
+    "Triangle": true,
+    "Vertex": true,
     "makePerspective": true
   },
   "strict": true,

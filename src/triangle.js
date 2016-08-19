@@ -4,7 +4,7 @@
 
   Triangle.each = function (triangleVerts, fn) {
     for(var i = 0; i < triangleVerts.length; i += 6) {
-      fn(triangleVerts.slice(i, i+6), i)
+      fn(triangleVerts.slice(i, i+6), i);
     }
   };
 
